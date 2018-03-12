@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "641986696916",
+    "firebase_url": "https://pgapp-a356c.firebaseio.com",
+    "project_id": "pgapp-a356c",
+    "storage_bucket": "pgapp-a356c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641986696916:android:4acec37fc69c6e6c",
+        "android_client_info": {
+          "package_name": "com.example.prem.pgapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641986696916-28krijd1srt7jip41j1bfh6m62aib1uj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALeVC-cO5kNZMHUJ4MEQidtCn0Vwf_auc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

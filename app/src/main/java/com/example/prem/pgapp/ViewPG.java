@@ -1,5 +1,6 @@
 package com.example.prem.pgapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +56,12 @@ public class ViewPG extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         pGsList.add(
                 new com.example.prem.pgapp.PGs(
-                        1,
-                        "Durga Boys PG",
-                        "Civil Lines,Allahabad",
-                        5.5,
-                        6000,
-                        R.drawable.pg1));
+                1,
+                "Durga Boys PG",
+                "Civil Lines,Allahabad",
+                5.5,
+                6000,
+                R.drawable.pg1));
 
         pGsList.add(
                 new com.example.prem.pgapp.PGs(
@@ -163,19 +166,23 @@ public class ViewPG extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_profile) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_boys) {
 
-        } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_girls) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logout) {
+            finish();
+            startActivity(new Intent(ViewPG.this,LoginActivity.class));
+            FirebaseAuth.getInstance().signOut();
+
+        }/* else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
