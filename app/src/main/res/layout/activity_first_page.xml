@@ -24,12 +24,32 @@
           android:id="@+id/editTextPassword"
           android:layout_width="match_parent"
           android:layout_height="wrap_content" />
+      <android.support.v7.widget.AppCompatEditText
+          android:layout_margin="15dp"
+          android:hint="Enter your name"
+          android:inputType="textPersonName"
+          android:id="@+id/editTextName"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+      <android.support.v7.widget.AppCompatEditText
+          android:layout_margin="15dp"
+          android:hint="Enter your mobile no"
+          android:inputType="textPhonetic"
+          android:id="@+id/editTextMobile"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
       <Button
           android:layout_margin="15dp"
-          android:id="@+id/buttonRegister"
+          android:id="@+id/buttonRegisterAsOwner"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:text="register user"/>
+          android:text="register user as owner"/>
+      <Button
+          android:layout_margin="15dp"
+          android:id="@+id/buttonRegisterAsTenant"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="register user as tenant"/>
 </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

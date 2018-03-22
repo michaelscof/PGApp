@@ -21,35 +21,49 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FirstPage extends AppCompatActivity implements OnClickListener {
-    private Button buttonRegister;
-    private EditText editTextEmail,editTextPassword;
+    private Button buttonRegisterAsOwner,buttonRegisterAsTenant;
+    private EditText editTextEmail,editTextPassword,editTextName,editTextMobile;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    public String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_page);
-        firebaseAuth=FirebaseAuth.getInstance();
         firebaseDatabase=FirebaseDatabase.getInstance();
-        buttonRegister=(Button)findViewById(R.id.buttonRegister);
+        buttonRegisterAsOwner=(Button)findViewById(R.id.buttonRegisterAsOwner);
+        buttonRegisterAsTenant=(Button)findViewById(R.id.buttonRegisterAsTenant);
         editTextEmail=(EditText)findViewById(R.id.editTextEmail);
         editTextPassword=(EditText)findViewById(R.id.editTextPassword);
-        buttonRegister.setOnClickListener(this);
+        editTextName=(EditText)findViewById(R.id.editTextName);
+        editTextMobile=(EditText)findViewById(R.id.editTextMobile);
+        buttonRegisterAsOwner.setOnClickListener(this);
+        buttonRegisterAsTenant.setOnClickListener(this);
         progressDialog=new ProgressDialog(this);
     }
     private void saveCredentials()
     {
+       /* String password=editTextPassword.getText().toString().trim();
         String email=editTextEmail.getText().toString().trim();
-        String password=editTextPassword.getText().toString().trim();
         final SaveCredentialsDB saveCredentialsDB=new SaveCredentialsDB(email,password);
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-            ref.child("Users").child(user.getUid()).setValue(saveCredentialsDB);
-        }
+           DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+           ref.child("Users").child(user.getUid()).setValue(saveCredentialsDB);
+        }*/
+        /*FirebaseUser user = firebaseAuth.getCurrentUser();
+        DatabaseReference ref=FirebaseDatabase.getInstance().getReference("Users");
+        Map<String, String> userData = new HashMap<String, String>();
+        userData.put("Email", email);
+        userData.put("Password", password);
+        ref = ref.child(email);
+        usersRef.setValue(userData);*/
     }
     private void registerUser()
     {
@@ -71,6 +85,7 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
         }
         progressDialog.setMessage("Registering User..");
         progressDialog.show();
+        firebaseAuth=FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -78,11 +93,25 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
                 {
                     //Registration Successfull
                     progressDialog.dismiss();
-                    Toast.makeText(FirstPage.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FirstPage.this, "Regustration Successfull", Toast.LENGTH_SHORT).show();
                     finish();
                     Intent intent=new Intent(getApplicationContext(),ViewPG.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(new Intent(intent));
+                    //SaveCredentials to firebase database
+                    String password=editTextPassword.getText().toString().trim();
+                    String email=editTextEmail.getText().toString().trim();
+                    String name=editTextName.getText().toString().trim();
+                    String mobile=editTextMobile.getText().toString().trim();
+                    final SaveCredentialsDB saveCredentialsDB=new SaveCredentialsDB(email,password,name,mobile);
+                    final OwnerPGCount ownerPGCount=new OwnerPGCount(0);
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        ref.child("Users").child(user.getUid()).setValue(saveCredentialsDB);
+
+                        ref.child("Owners").child(user.getUid()).setValue(ownerPGCount);
+                    }
                 }
                 else
                 {
@@ -96,7 +125,70 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
     }
     @Override
     public void onClick(View view) {
-            registerUser();
+            if(view==buttonRegisterAsTenant){
+            registerUser();}
+            if(view==buttonRegisterAsOwner)
+            {
+                   registerUserAsOwner();
+            }
             saveCredentials();
     }
+
+    private void registerUserAsOwner() {
+        String email=editTextEmail.getText().toString().trim();
+        String password=editTextPassword.getText().toString().trim();
+        if(TextUtils.isEmpty(email))
+        {
+            Toast.makeText(this,"Please Enter Email",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please Enter Password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(password.length()<6)
+        {
+            Toast.makeText(this,"Minimum password length should be 6!!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        progressDialog.setMessage("Registering User..");
+        progressDialog.show();
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful())
+                {
+                    //Registration Successfull
+                    progressDialog.dismiss();
+                    Toast.makeText(FirstPage.this, "Regustration Successfull", Toast.LENGTH_SHORT).show();
+                    finish();
+                    Intent intent=new Intent(getApplicationContext(),ViewPG.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(new Intent(intent));
+                    //SaveCredentials to firebase database
+                    String password=editTextPassword.getText().toString().trim();
+                    String email=editTextEmail.getText().toString().trim();
+                    String name=editTextName.getText().toString().trim();
+                    String mobile=editTextMobile.getText().toString().trim();
+                    final SaveCredentialsDB saveCredentialsDB=new SaveCredentialsDB(email,password,name,mobile);
+                    final OwnerPGCount ownerPGCount=new OwnerPGCount(0);
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        ref.child("Users").child(user.getUid()).setValue(saveCredentialsDB);
+                        ref.child("Owners").child(user.getUid()).setValue(ownerPGCount);
+                    }
+                }
+                else
+                {
+                    //Registration Unsuccessfull
+                    //Log.i("Response","Failed to create user!!"+task.getException().getLocalizedMessage());
+                    progressDialog.dismiss();
+                    Toast.makeText(FirstPage.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
 }

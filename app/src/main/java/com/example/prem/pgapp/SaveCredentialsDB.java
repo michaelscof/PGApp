@@ -7,13 +7,17 @@ package com.example.prem.pgapp;
 public class SaveCredentialsDB {
     public String email;
     public String password;
+    public String name;
+    public String mobile;
     public SaveCredentialsDB()
     {
 
     }
 
-    public SaveCredentialsDB(String email, String password) {
+    public SaveCredentialsDB(String email, String password, String name, String mobile) {
         this.email = email;
         this.password = password;
+        this.name = name;
+        this.mobile = mobile;
     }
 }

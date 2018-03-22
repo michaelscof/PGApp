@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,21 +16,46 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPG extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
     RecyclerView recyclerView;
     PGAdapter pgAdapter;
+    private ImageView imageViewCust;
+    private NavigationView navigationView;
+    private TextView textViewEmail,textViewName;
+    private DatabaseReference databaseReference;
+    private FirebaseUser firebaseUser;
+    public String user;
     List<com.example.prem.pgapp.PGs> pGsList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pg);
+        navigationView=(NavigationView)findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        user=FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+        Toast.makeText(this,user,Toast.LENGTH_SHORT).show();
+        View header=navigationView.getHeaderView(0);
+        imageViewCust=(ImageView)findViewById(R.id.imageViewCust);
+        //imageViewCust.setImageBitmap();
+        databaseReference= FirebaseDatabase.getInstance().getReference();
+        textViewEmail=(TextView)header.findViewById(R.id.textViewEmail1);
+        textViewName=(TextView)header.findViewById(R.id.textViewName);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -41,7 +67,6 @@ public class ViewPG extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -129,6 +154,33 @@ public class ViewPG extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                showData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void showData(DataSnapshot dataSnapshot) {
+        for(DataSnapshot ds:dataSnapshot.getChildren())
+        {
+            CustomerInformation customerInformation=new CustomerInformation();
+            customerInformation.setEmail(ds.child(user).getValue(CustomerInformation.class).getEmail());
+            customerInformation.setName(ds.child(user).getValue(CustomerInformation.class).getName());
+            textViewEmail.setText(customerInformation.getEmail());
+            textViewName.setText(customerInformation.getName());
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -142,9 +194,9 @@ public class ViewPG extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.view_pg, menu);
+        menu.findItem(R.id.buttonAdd).setVisible(false);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -153,7 +205,7 @@ public class ViewPG extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.buttonAdd) {
             return true;
         }
 
@@ -175,7 +227,9 @@ public class ViewPG extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             finish();
-            startActivity(new Intent(ViewPG.this,LoginActivity.class));
+            Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(new Intent(intent));
             FirebaseAuth.getInstance().signOut();
 
         }/* else if (id == R.id.nav_share) {
@@ -187,5 +241,10 @@ public class ViewPG extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
