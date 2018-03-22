@@ -109,8 +109,6 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
                     if (user != null) {
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                         ref.child("Users").child(user.getUid()).setValue(saveCredentialsDB);
-
-                        ref.child("Owners").child(user.getUid()).setValue(ownerPGCount);
                     }
                 }
                 else

@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="Food" />
+            android:text="Food"/>
 
         <CheckBox
             android:id="@+id/postAdMaid"
@@ -245,13 +245,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="0dp"
             android:ems="10"
             android:hint="Contact"
             android:inputType="number"
             android:textSize="15sp" />
 
         </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="150dp"
+            android:text="Submit"
+            android:id="@+id/postAdSubmit"/>
     </LinearLayout>
 
 
