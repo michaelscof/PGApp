@@ -14,16 +14,15 @@
             android:layout_height="wrap_content"
             android:padding="8dp">
 
-            <ImageView
+   <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="120dp"
                 android:layout_height="90dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:padding="4dp" />
-
             <TextView
-                android:id="@+id/textViewTitle"
+                android:id="@+id/viewPGName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -35,10 +34,10 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textViewShortDesc"
+                android:id="@+id/viewPGArea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textViewTitle"
+                android:layout_below="@id/viewPGName"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/imageView"
@@ -47,10 +46,10 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
             <TextView
-                android:id="@+id/textViewRating"
+                android:id="@+id/viewPGType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textViewShortDesc"
+                android:layout_below="@id/viewPGArea"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/imageView"
@@ -65,7 +64,7 @@
                 android:id="@+id/textViewPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textViewRating"
+                android:layout_below="@id/viewPGType"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/imageView"
@@ -73,7 +72,6 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textColor="@android:color/background_dark"
                 android:textStyle="bold" />
-
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

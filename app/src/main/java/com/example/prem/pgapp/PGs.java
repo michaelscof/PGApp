@@ -5,42 +5,28 @@ package com.example.prem.pgapp;
  */
 
 public class PGs {
-    private int id;
-    private String title,_shortdesc;
-    private double rating;
-    private double price;
-    private int image;
-
-    public PGs(int id, String title, String _shortdesc, double rating, double price, int image) {
-        this.id = id;
-        this.title = title;
-        this._shortdesc = _shortdesc;
-        this.rating = rating;
-        this.price = price;
-        this.image = image;
+    private String name,area,type;
+    public PGs(String name, String area, String type) {
+        this.name = name;
+        this.area = area;
+        this.type = type;
     }
 
-    public int getId() {
-        return id;
+    public PGs(String name) {
+        this.name = name;
     }
 
-    public String getTitle() {
-        return title;
+    public PGs() {
+
     }
 
-    public String get_shortdesc() {
-        return _shortdesc;
+    public String getName() {
+        return name;
     }
 
-    public double getRating() {
-        return rating;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public int getImage() {
-        return image;
-    }
+    
 }

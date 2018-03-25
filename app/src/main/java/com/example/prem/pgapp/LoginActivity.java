@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(task.isSuccessful())
                 {
                     finish();
-                    Intent intent=new Intent(LoginActivity.this,PostAd.class);
+                    Intent intent=new Intent(LoginActivity.this,ViewPG.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(new Intent(intent));
                     return;

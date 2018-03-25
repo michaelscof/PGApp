@@ -7,8 +7,25 @@ package com.example.prem.pgapp;
 public class CustomerInformation {
     String email;
     String name;
-
+    String password;
+    String mobile;
     public CustomerInformation() {
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getEmail() {

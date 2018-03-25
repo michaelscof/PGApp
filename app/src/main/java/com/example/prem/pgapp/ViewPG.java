@@ -1,12 +1,16 @@
 package com.example.prem.pgapp;
 
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,17 +20,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,28 +42,29 @@ import java.util.List;
 public class ViewPG extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
     RecyclerView recyclerView;
-    PGAdapter pgAdapter;
     private ImageView imageViewCust;
     private NavigationView navigationView;
     private TextView textViewEmail,textViewName;
     private DatabaseReference databaseReference;
-    private FirebaseUser firebaseUser;
+    private FirebaseDatabase firebaseDatabase;
+    private Query query;
     public String user;
-    List<com.example.prem.pgapp.PGs> pGsList;
+    FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pg);
-        navigationView=(NavigationView)findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        user=FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-        Toast.makeText(this,user,Toast.LENGTH_SHORT).show();
-        View header=navigationView.getHeaderView(0);
-        imageViewCust=(ImageView)findViewById(R.id.imageViewCust);
+        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
+        View header = navigationView.getHeaderView(0);
+        imageViewCust = findViewById(R.id.imageViewCust);
         //imageViewCust.setImageBitmap();
-        databaseReference= FirebaseDatabase.getInstance().getReference();
-        textViewEmail=(TextView)header.findViewById(R.id.textViewEmail1);
-        textViewName=(TextView)header.findViewById(R.id.textViewName);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Users/" + user);
+        textViewEmail = (TextView) header.findViewById(R.id.textViewEmail1);
+        textViewName = (TextView) header.findViewById(R.id.textViewName);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -75,91 +84,13 @@ public class ViewPG extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        pGsList=new ArrayList<>();
-        recyclerView=(RecyclerView)findViewById(R.id.RecyclerViewCust);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                1,
-                "Durga Boys PG",
-                "Civil Lines,Allahabad",
-                5.5,
-                6000,
-                R.drawable.pg1));
-
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                        1,
-                        "Dreamsquare Girls PG",
-                        "Katra,Allahabad",
-                        4.3,
-                        4000,
-                        R.drawable.pg1));
-
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                        1,
-                        "Homestay Boys PG",
-                        "Rambagh,Allahabad",
-                        4.3,
-                        60000,
-                        R.drawable.pg1));
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                        1,
-                        "Nestaway Boys PG",
-                        "Govindpur,Allahabad",
-                        4.3,
-                        60000,
-                        R.drawable.pg1));
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                        1,
-                        "Sector 24 Boys PG",
-                        "Teliarganj,Allahabad",
-                        4.3,
-                        60000,
-                        R.drawable.pg1));
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                        1,
-                        "Sector 18 Boys PG",
-                        "Civil Lines,Allahabad",
-                        4.3,
-                        60000,
-                        R.drawable.pg1));
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                        1,
-                        "Sector 22 Boys PG",
-                        "Mutthiganj,Allahabad",
-                        4.3,
-                        60000,
-                        R.drawable.pg1));
-        pGsList.add(
-                new com.example.prem.pgapp.PGs(
-                        1,
-                        "Saket Boys PG",
-                        "Teliarganj,Allahabad",
-                        4.3,
-                        60000,
-                        R.drawable.pg1));
-
-        //creating recyclerview adapter
-        PGAdapter adapter = new PGAdapter(this, pGsList);
-
-        //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
+                String email = dataSnapshot.child("email").getValue(String.class);
+                textViewEmail.setText(email);
+                String name = dataSnapshot.child("name").getValue(String.class);
+                textViewName.setText(name);
             }
 
             @Override
@@ -167,17 +98,39 @@ public class ViewPG extends AppCompatActivity
 
             }
         });
+        recyclerView = (RecyclerView) findViewById(R.id.RecyclerViewCust);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        DatabaseReference databaseReferencePG = FirebaseDatabase.getInstance().getReference("PGs");
+        query = databaseReferencePG.orderByKey();
+        FirebaseRecyclerOptions<PostAdDB> options =
+                new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                        .setQuery(query, PostAdDB.class)
+                        .build();
+        adapter=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                holder.setName(model.getName());
+                holder.setAddress(model.getAddress());
+                holder.setContact(model.getContact());
+                holder.setLandmark(model.getLandmark());
+                holder.setImage(getBaseContext(),model.getImage());
+            }
+
+            @Override
+            public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.pg_list_layout, parent, false);
+                return new PGHolder(view);
+            }
+        };
+        recyclerView.setAdapter(adapter);
     }
 
-    private void showData(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds:dataSnapshot.getChildren())
-        {
-            CustomerInformation customerInformation=new CustomerInformation();
-            customerInformation.setEmail(ds.child(user).getValue(CustomerInformation.class).getEmail());
-            customerInformation.setName(ds.child(user).getValue(CustomerInformation.class).getName());
-            textViewEmail.setText(customerInformation.getEmail());
-            textViewName.setText(customerInformation.getName());
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
 
     @Override
@@ -231,13 +184,7 @@ public class ViewPG extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(new Intent(intent));
             FirebaseAuth.getInstance().signOut();
-
-        }/* else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
-
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

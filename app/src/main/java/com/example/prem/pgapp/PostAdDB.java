@@ -5,17 +5,35 @@ package com.example.prem.pgapp;
  */
 
 public class PostAdDB {
-    public String name,address,location,landmark,image,contact;
+    public String name,address,location,landmark,image,contact,ownerid;
     public int seater,price;
     public boolean boys,girls,ac,wifi,food,maid,laundry;
-
-    public PostAdDB(String name, String address, String location, String landmark, String image,int seater, int price, String contact, boolean boys, boolean girls, boolean ac, boolean wifi, boolean food, boolean maid, boolean laundry) {
+    public PostAdDB()
+    {
+        this.name = null;
+        this.address = null;
+        this.location = null;
+        this.landmark = null;
+        this.image = null;
+        this.seater = 0;
+        this.price = 0;
+        this.contact = null;
+        this.boys = false;
+        this.girls = false;
+        this.ac = false;
+        this.wifi = false;
+        this.food = false;
+        this.maid = false;
+        this.laundry = false;
+        this.ownerid = null;
+    }
+    public PostAdDB(String name, String address, String location, String landmark, String image,int seater, int price, String contact, boolean boys, boolean girls, boolean ac, boolean wifi, boolean food, boolean maid, boolean laundry,String ownerid) {
         this.name = name;
         this.address = address;
         this.location = location;
         this.landmark = landmark;
-        this.seater = seater;
         this.image = image;
+        this.seater = seater;
         this.price = price;
         this.contact = contact;
         this.boys = boys;
@@ -25,6 +43,7 @@ public class PostAdDB {
         this.food = food;
         this.maid = maid;
         this.laundry = laundry;
+        this.ownerid = ownerid;
     }
 
     public String getName() {
@@ -145,5 +164,13 @@ public class PostAdDB {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getOwnerid() {
+        return ownerid;
+    }
+
+    public void setOwnerid(String ownerid) {
+        this.ownerid = ownerid;
     }
 }

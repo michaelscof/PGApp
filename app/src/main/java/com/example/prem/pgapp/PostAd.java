@@ -1,5 +1,12 @@
 package com.example.prem.pgapp;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.drm.DrmManagerClient;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,9 +15,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,22 +28,33 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class PostAd extends AppCompatActivity implements View.OnClickListener {
+    private static final int PICK_IMAGE_REQUEST = 123;
     private Button postAdSubmit;
+    private ImageButton imageButtonPG;
     private EditText editTextName,editTextAddress,editTextLocation,editTextLandmark,editTextMobile,editTextSeater,editTextPrice;
     private RadioButton radioButtonBoys,radioButtonGirls;
     private CheckBox checkBoxAc,checkBoxLaundry,checkBoxWiFi,checkBoxMaid,checkBoxFood;
     private int pgcount,seater,price;
     private boolean ac,maid,laundry,wifi,food,boys,girls;
     private FirebaseUser firebaseUser;
-    private String name,address,location,landmark,contact;
+    private String name,address,location,landmark,contact,uniqueid,imagePath;
+    private Uri filePath;
+    private DatabaseReference databaseReference;
+    private StorageReference storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_ad);
+        storageReference= FirebaseStorage.getInstance().getReference();
         postAdSubmit=findViewById(R.id.postAdSubmit);
         editTextName=findViewById(R.id.postAdName);
         editTextAddress=findViewById(R.id.postAdAddress);
@@ -49,7 +70,9 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         checkBoxLaundry=findViewById(R.id.postAdLaundry);
         checkBoxMaid=findViewById(R.id.postAdMaid);
         checkBoxWiFi=findViewById(R.id.postAdWifi);
+        imageButtonPG=findViewById(R.id.imageButtonPG);
         postAdSubmit.setOnClickListener(this);
+        imageButtonPG.setOnClickListener(this);
     }
 
     @Override
@@ -94,16 +117,53 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         landmark=editTextLandmark.getText().toString();
         location=editTextLocation.getText().toString();
         address=editTextAddress.getText().toString();
+        databaseReference=FirebaseDatabase.getInstance().getReference("PGs");
+        uniqueid=databaseReference.push().getKey();
     }
     public void postAd()
     {
         getValues();
-        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("PGs");
-        PostAdDB postAdDB=new PostAdDB(name,address,location,landmark,"1234",seater,price,contact,boys,girls,ac,wifi,food,maid,laundry);
-        databaseReference.push().setValue(postAdDB);
-        databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
-        OwnerPGCount ownerPGCount=new OwnerPGCount(pgcount);
-        databaseReference.child(firebaseUser.getUid()).setValue(ownerPGCount);
+        if(filePath!=null)
+        {
+            final ProgressDialog progressDialog=new ProgressDialog(this);
+            progressDialog.setMessage("Uploading profile photo!!");
+            progressDialog.show();
+            StorageReference picReference=storageReference.child("PGs/"+uniqueid);
+            picReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Uri downloadUrl=taskSnapshot.getDownloadUrl();
+                    imagePath=downloadUrl.toString();
+                    System.out.println("Image path:"+imagePath);
+                    Toast.makeText(getApplicationContext(),"File uploaded",Toast.LENGTH_SHORT).show();
+                    PostAdDB postAdDB=new PostAdDB(name,address,location,landmark,imagePath,seater,price,contact,boys,girls,ac,wifi,food,maid,laundry,firebaseUser.getUid());
+                    databaseReference.child(uniqueid).setValue(postAdDB);
+                    databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
+                    OwnerPGCount ownerPGCount=new OwnerPGCount(pgcount);
+                    databaseReference.child(firebaseUser.getUid()).setValue(ownerPGCount);
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress=(100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"Upload failed!!",Toast.LENGTH_LONG).show();
+        }
+
     }
     @Override
     public void onClick(View view) {
@@ -111,7 +171,35 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         {
             postAd();
         }
+        if(view==imageButtonPG)
+        {
+            showFileChooser();
+        }
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageButtonPG.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void uploadFile()
+    {
+    }
+    private void showFileChooser() {
+        Intent intent=new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Picture"),PICK_IMAGE_REQUEST);
+    }
+
     public void Facilities(View view)
     {
 

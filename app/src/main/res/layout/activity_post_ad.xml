@@ -183,9 +183,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
-            <ImageButton
-                android:layout_width="190dp"
-                android:layout_height="200dp" />
+        <ImageButton
+            android:layout_width="190dp"
+            android:layout_height="200dp"
+            android:id="@+id/imageButtonPG" />
         </LinearLayout>
         </LinearLayout>
         <LinearLayout

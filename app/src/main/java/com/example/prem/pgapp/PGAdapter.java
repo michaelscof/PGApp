@@ -18,7 +18,7 @@ import java.util.List;
 1.RecyclerView.Adapter
 2.RecyclerView.ViewHolder
  */
-public class PGAdapter extends RecyclerView.Adapter<PGAdapter.PGViewHolder> {
+/*public class PGAdapter extends RecyclerView.Adapter<PGAdapter.PGViewHolder> {
     private Context mCtx;
     private List<PGs> pgList;
 
@@ -28,7 +28,7 @@ public class PGAdapter extends RecyclerView.Adapter<PGAdapter.PGViewHolder> {
     }
 
     @Override
-    public PGViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    /*public PGViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater pgInflater=LayoutInflater.from(mCtx);
         View pgView=pgInflater.inflate(R.layout.pg_list_layout,null);
         PGViewHolder pgViewHolder=new PGViewHolder(pgView);
@@ -65,3 +65,4 @@ public class PGAdapter extends RecyclerView.Adapter<PGAdapter.PGViewHolder> {
         }
     }
 }
+*/

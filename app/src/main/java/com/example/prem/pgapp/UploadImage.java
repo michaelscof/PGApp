@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -64,11 +65,6 @@ public class UploadImage extends AppCompatActivity implements View.OnClickListen
             final ProgressDialog progressDialog=new ProgressDialog(this);
             progressDialog.setMessage("Uploading profile photo!!");
             progressDialog.show();
-            //String x=filePath.toString();
-            /*Context context = null;
-            ContentResolver cR = context.getContentResolver();
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
-            String type = mime.getExtensionFromMimeType(cR.getType(filePath));*/
             StorageReference picReference=storageReference.child("UsersProfilePic/"+email);
             picReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -104,6 +100,7 @@ public class UploadImage extends AppCompatActivity implements View.OnClickListen
         buttonChoose=(Button)findViewById(R.id.buttonChoose);
         buttonUpload=(Button)findViewById(R.id.buttonUpload);
         imageView=(ImageView)findViewById(R.id.imageView);
+        Picasso.with(UploadImage.this).load("https://www.codechef.com/download/small-banner/COOK92B/1521032470.jpg").into(imageView);
         storageReference= FirebaseStorage.getInstance().getReference();
         buttonChoose.setOnClickListener(this);
         buttonUpload.setOnClickListener(this);
