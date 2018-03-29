@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.prem.pgapp.SinglePGActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="3dp">
+
+        <ImageView
+            android:id="@+id/imageViewPG"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:id="@+id/viewPGDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp">
+
+            <TextView
+                android:id="@+id/textViewPGName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Helloworld" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="20dp">
+            <ImageView
+                android:id="@+id/showAC"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_laundry"
+                android:layout_margin="5dp"/>
+
+            <ImageView
+                android:id="@+id/showFood"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_no_ac"
+                android:layout_margin="5dp"/>
+
+            <ImageView
+                android:id="@+id/showMaid"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_food"
+                android:layout_margin="5dp"/>
+
+            <ImageView
+                android:id="@+id/showLaundry"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_no_wifi"
+                android:layout_margin="5dp"/>
+
+            <ImageView
+                android:id="@+id/showWifi"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_no_maid"
+                android:layout_margin="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

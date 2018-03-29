@@ -67,7 +67,6 @@ public class ViewPG extends AppCompatActivity
         textViewName =  header.findViewById(R.id.textViewName);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +109,7 @@ public class ViewPG extends AppCompatActivity
         adapter=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                final String pgkey=getRef(position).getKey();
                 holder.setName(model.getName());
                 holder.setAddress(model.getLocation());
                 holder.setContact(model.getContact());
@@ -118,10 +118,10 @@ public class ViewPG extends AppCompatActivity
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        finish();
-                        Intent intent=new Intent(getApplicationContext(),MapsActivityUser.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                        intent.putExtra("pgkey",pgkey);
                         startActivity(new Intent(intent));
+                        finish();
                         return;
                     }
                 });
