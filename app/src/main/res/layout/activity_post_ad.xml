@@ -186,7 +186,8 @@
         <ImageButton
             android:layout_width="190dp"
             android:layout_height="200dp"
-            android:id="@+id/imageButtonPG" />
+            android:id="@+id/imageButtonPG"
+            android:background="@drawable/ic_photo_camera"/>
         </LinearLayout>
         </LinearLayout>
         <LinearLayout

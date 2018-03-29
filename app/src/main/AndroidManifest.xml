@@ -23,17 +23,13 @@
             android:name=".ViewPG"
             android:label="View PGs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FirstPage"></activity>
+        <activity android:name=".FirstPage" />
         <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".UploadImage"></activity>
-        <activity android:name=".PostAd"></activity>
+        <activity android:name=".UploadImage" />
+        <activity android:name=".PostAd" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -46,9 +42,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".MapsActivityUser">
+        <activity android:name=".MapsActivityUser"></activity>
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

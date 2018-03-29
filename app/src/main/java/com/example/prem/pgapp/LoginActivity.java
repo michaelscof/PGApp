@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,14 +26,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText editTextEmail,editTextPassword;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
+    private Spinner loginSpinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         firebaseAuth=FirebaseAuth.getInstance();
-        editTextEmail=(EditText)findViewById(R.id.editTextEmail);
-        editTextPassword=(EditText)findViewById(R.id.editTextPassword);
-        buttonLogin=(Button)findViewById(R.id.buttonLogin);
+        editTextEmail=findViewById(R.id.editTextEmail);
+        editTextPassword=findViewById(R.id.editTextPassword);
+        buttonLogin=findViewById(R.id.buttonLogin);
+        loginSpinner=findViewById(R.id.loginSpinner);
         progressDialog=new ProgressDialog(this);
         buttonLogin.setOnClickListener(this);
     }
@@ -57,10 +60,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 progressDialog.dismiss();
                 if(task.isSuccessful())
                 {
-                    finish();
-                    Intent intent=new Intent(LoginActivity.this,ViewPG.class);
+                    Intent intent;
+                    if(loginSpinner.getSelectedItemId()==0)
+                        intent=new Intent(LoginActivity.this,PostAd.class);
+                    else
+                        intent=new Intent(LoginActivity.this,ViewPG.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(new Intent(intent));
+                    finish();
                     return;
                 }
                 else
@@ -69,16 +76,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
-        /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null)
-        {
-            boolean emailVerified = user.isEmailVerified();
-            if(emailVerified)
-                Toast.makeText(this,"Enter correct password",Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(this,"Enter correct email id",Toast.LENGTH_LONG).show();
-        }*/
-
     }
     @Override
     public void onClick(View view) {

@@ -50,6 +50,7 @@ public class ViewPG extends AppCompatActivity
     private Query query;
     public String user;
     FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter;
+    FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +61,10 @@ public class ViewPG extends AppCompatActivity
         Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
         View header = navigationView.getHeaderView(0);
         imageViewCust = findViewById(R.id.imageViewCust);
-        //imageViewCust.setImageBitmap();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users/" + user);
-        textViewEmail = (TextView) header.findViewById(R.id.textViewEmail1);
-        textViewName = (TextView) header.findViewById(R.id.textViewName);
+        textViewEmail = header.findViewById(R.id.textViewEmail1);
+        textViewName =  header.findViewById(R.id.textViewName);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -111,10 +111,20 @@ public class ViewPG extends AppCompatActivity
             @Override
             protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                 holder.setName(model.getName());
-                holder.setAddress(model.getAddress());
+                holder.setAddress(model.getLocation());
                 holder.setContact(model.getContact());
                 holder.setLandmark(model.getLandmark());
                 holder.setImage(getBaseContext(),model.getImage());
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                        Intent intent=new Intent(getApplicationContext(),MapsActivityUser.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(new Intent(intent));
+                        return;
+                    }
+                });
             }
 
             @Override
@@ -145,23 +155,16 @@ public class ViewPG extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.view_pg, menu);
         menu.findItem(R.id.buttonAdd).setVisible(false);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.buttonAdd) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -174,9 +177,57 @@ public class ViewPG extends AppCompatActivity
         if (id == R.id.nav_profile) {
             // Handle the camera action
         } else if (id == R.id.nav_boys) {
+            DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+            query = databaseReferencePG1.orderByChild("boys").equalTo(true);
+            FirebaseRecyclerOptions<PostAdDB> options1 =
+                    new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                            .setQuery(query, PostAdDB.class)
+                            .build();
+            adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                @Override
+                protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    holder.setName(model.getName());
+                    holder.setAddress(model.getAddress());
+                    holder.setContact(model.getContact());
+                    holder.setLandmark(model.getLandmark());
+                    holder.setImage(getBaseContext(),model.getImage());
+                }
 
-
+                @Override
+                public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.pg_list_layout, parent, false);
+                    return new PGHolder(view);
+                }
+            };
+            adapter1.startListening();
+            recyclerView.setAdapter(adapter1);
         } else if (id == R.id.nav_girls) {
+            DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+            query = databaseReferencePG1.orderByChild("girls").equalTo(true);
+            FirebaseRecyclerOptions<PostAdDB> options1 =
+                    new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                            .setQuery(query, PostAdDB.class)
+                            .build();
+            adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                @Override
+                protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    holder.setName(model.getName());
+                    holder.setAddress(model.getAddress());
+                    holder.setContact(model.getContact());
+                    holder.setLandmark(model.getLandmark());
+                    holder.setImage(getBaseContext(),model.getImage());
+                }
+
+                @Override
+                public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.pg_list_layout, parent, false);
+                    return new PGHolder(view);
+                }
+            };
+            adapter1.startListening();
+            recyclerView.setAdapter(adapter1);
 
         } else if (id == R.id.nav_logout) {
             finish();

@@ -20,4 +20,8 @@
         completions."
     </string>
     <string name="title_activity_maps_user">Map</string>
+    <string-array name="types">
+        <item>Owner</item>
+        <item>Tenant</item>
+    </string-array>
 </resources>
