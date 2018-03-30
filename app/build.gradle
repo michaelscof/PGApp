@@ -39,5 +39,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-firestore:3.2.2'
     implementation 'com.firebaseui:firebase-ui-auth:3.2.2'
     implementation 'com.firebaseui:firebase-ui-storage:3.2.2'
+    compile 'com.airbnb.android:lottie:2.2.5'
+    compile 'de.hdodenhof:circleimageview:1.3.0'
 }
 apply plugin: 'com.google.gms.google-services'

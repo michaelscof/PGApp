@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         progressDialog.setMessage("User Logging In");
         progressDialog.show();
+        final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -61,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(task.isSuccessful())
                 {
                     Intent intent;
-                    if(loginSpinner.getSelectedItemId()==0)
+                    if(loginSpinner.getSelectedItemId()==0 && databaseReference.child("Owners/"+firebaseAuth.getUid())!=null)
                         intent=new Intent(LoginActivity.this,PostAd.class);
                     else
                         intent=new Intent(LoginActivity.this,ViewPG.class);

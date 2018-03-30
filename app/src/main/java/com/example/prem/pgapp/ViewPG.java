@@ -60,7 +60,7 @@ public class ViewPG extends AppCompatActivity
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
         View header = navigationView.getHeaderView(0);
-        imageViewCust = findViewById(R.id.imageViewCust);
+        imageViewCust = header.findViewById(R.id.imageViewCust);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users/" + user);
         textViewEmail = header.findViewById(R.id.textViewEmail1);
@@ -90,6 +90,7 @@ public class ViewPG extends AppCompatActivity
                 textViewEmail.setText(email);
                 String name = dataSnapshot.child("name").getValue(String.class);
                 textViewName.setText(name);
+                Picasso.with(getBaseContext()).load("https://firebasestorage.googleapis.com/v0/b/pgapp-a356c.appspot.com/o/UsersProfilePic%2Fpremkagrani%40gmail.com?alt=media&token=5bcae97f-3605-4718-abc5-811e9dea9d72").resize(200,200).transform(new CircleTransform()).centerCrop().into(imageViewCust);
             }
 
             @Override
