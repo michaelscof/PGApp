@@ -11,7 +11,6 @@ public class SaveCredentialsDB {
     public String mobile;
     public SaveCredentialsDB()
     {
-
     }
 
     public SaveCredentialsDB(String email, String password, String name, String mobile) {

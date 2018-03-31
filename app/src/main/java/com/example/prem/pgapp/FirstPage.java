@@ -159,7 +159,7 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
                 {
                     //Registration Successfull
                     progressDialog.dismiss();
-                    Toast.makeText(FirstPage.this, "Regustration Successfull", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FirstPage.this, "Registration Successfull", Toast.LENGTH_SHORT).show();
                     finish();
                     Intent intent=new Intent(getApplicationContext(),ViewPG.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -181,7 +181,6 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
                 else
                 {
                     //Registration Unsuccessfull
-                    //Log.i("Response","Failed to create user!!"+task.getException().getLocalizedMessage());
                     progressDialog.dismiss();
                     Toast.makeText(FirstPage.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }

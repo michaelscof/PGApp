@@ -23,15 +23,9 @@
             android:name=".ViewPG"
             android:label="View PGs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FirstPage" >
-
-        </activity>
+        <activity android:name=".FirstPage" />
         <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".UploadImage" />
@@ -61,9 +55,17 @@
         <activity
             android:name=".OwnerHomeDrawer"
             android:label="@string/title_activity_owner_home_drawer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ChangePassword"
-            android:label="Change Password"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ChangePassword"
+            android:label="Change Password" />
+        <activity android:name=".ViewProperties">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

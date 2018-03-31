@@ -102,7 +102,6 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
                 return true;
             case android.R.id.home:
                 intent = new Intent(this, OwnerHomeDrawer.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
                 return true;

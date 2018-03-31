@@ -113,7 +113,7 @@ public class ViewPG extends AppCompatActivity
                 final String pgkey=getRef(position).getKey();
                 holder.setName(model.getName());
                 holder.setAddress(model.getLocation());
-                holder.setContact(model.getContact());
+                holder.setType(model.isBoys());
                 holder.setLandmark(model.getLandmark());
                 holder.setImage(getBaseContext(),model.getImage());
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +189,7 @@ public class ViewPG extends AppCompatActivity
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
-                    holder.setContact(model.getContact());
+                    holder.setType(model.isBoys());
                     holder.setLandmark(model.getLandmark());
                     holder.setImage(getBaseContext(),model.getImage());
                 }
@@ -215,7 +215,7 @@ public class ViewPG extends AppCompatActivity
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
-                    holder.setContact(model.getContact());
+                    holder.setType(model.isBoys());
                     holder.setLandmark(model.getLandmark());
                     holder.setImage(getBaseContext(),model.getImage());
                 }

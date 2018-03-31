@@ -126,7 +126,14 @@ public class OwnerHomeDrawer extends AppCompatActivity
             Intent intent=new Intent(getApplicationContext(),PostAd.class);
             startActivity(new Intent(intent));
             finish();
-        } else if (id == R.id.nav_edit_profile) {
+        }
+        else if (id == R.id.nav_view_properties)
+        {
+            Intent intent=new Intent(getApplicationContext(),ViewProperties.class);
+            startActivity(new Intent(intent));
+            finish();
+        }
+        else if (id == R.id.nav_edit_profile) {
 
         } else if (id == R.id.nav_change_password) {
             Intent intent=new Intent(getApplicationContext(),ChangePassword.class);
