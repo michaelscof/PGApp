@@ -1,6 +1,7 @@
 package com.example.prem.pgapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -17,31 +18,36 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v7.app.AlertDialog;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class ViewProperties extends AppCompatActivity {
     private Intent intent;
     private Query query;
+    public int pgCount;
     private FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter,adapter1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_properties);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         ActionBar actionBar=getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.RecyclerViewOwner);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DatabaseReference databaseReferencePG = FirebaseDatabase.getInstance().getReference("PGs");
+        final DatabaseReference databaseReferencePG = FirebaseDatabase.getInstance().getReference("PGs");
         query = databaseReferencePG.orderByChild("ownerid").equalTo(FirebaseAuth.getInstance().getUid());
         FirebaseRecyclerOptions<PostAdDB> options =
                 new FirebaseRecyclerOptions.Builder<PostAdDB>()
@@ -59,7 +65,33 @@ public class ViewProperties extends AppCompatActivity {
                 holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(),"yeahhh",Toast.LENGTH_SHORT).show();
+                       alertDialogBuilder.setTitle("Delete PG?").setMessage("Are you sure about this?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                       databaseReferencePG.child(pgkey).removeValue();
+                                       DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Owners/"+FirebaseAuth.getInstance().getUid());
+                                       databaseReference.addValueEventListener(new ValueEventListener() {
+                                           @Override
+                                           public void onDataChange(DataSnapshot dataSnapshot) {
+                                               pgCount=dataSnapshot.child("pgCount").getValue(Integer.class);
+                                               pgCount--;
+                                           }
+
+                                           @Override
+                                           public void onCancelled(DatabaseError databaseError) {
+
+                                           }
+                                       });
+                                       databaseReference.child("pgCount").setValue(pgCount);
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .show();
                     }
                 });
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
