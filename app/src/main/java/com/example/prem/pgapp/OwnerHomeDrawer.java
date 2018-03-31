@@ -124,26 +124,29 @@ public class OwnerHomeDrawer extends AppCompatActivity
 
         if (id == R.id.nav_post_ad) {
             Intent intent=new Intent(getApplicationContext(),PostAd.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(new Intent(intent));
             finish();
         } else if (id == R.id.nav_edit_profile) {
 
         } else if (id == R.id.nav_change_password) {
-
-        } else if (id == R.id.nav_logout) {
+            Intent intent=new Intent(getApplicationContext(),ChangePassword.class);
+            startActivity(new Intent(intent));
+            finish();
+        }
+        else if (id == R.id.nav_logout) {
             Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(new Intent(intent));
             finish();
             FirebaseAuth.getInstance().signOut();
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        }
+        else if (id == R.id.nav_share) {
 
         }
+        else if (id == R.id.nav_send) {
 
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

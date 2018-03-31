@@ -23,13 +23,15 @@
             android:name=".ViewPG"
             android:label="View PGs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FirstPage" />
-        <activity android:name=".LoginActivity" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".FirstPage" >
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        </activity>
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".UploadImage" />
@@ -47,21 +49,21 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".MapsActivityUser" />
-        <activity android:name=".SplashActivity"></activity>
+        <activity android:name=".SplashActivity" />
         <activity
             android:name=".SinglePGActivity"
             android:label="View this PG"
             android:parentActivityName=".ViewPG">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ViewPG"></meta-data>
+                android:value=".ViewPG" />
         </activity>
         <activity
             android:name=".OwnerHomeDrawer"
             android:label="@string/title_activity_owner_home_drawer"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ChangePassword"
+            android:label="Change Password"></activity>
     </application>
 
 </manifest>
