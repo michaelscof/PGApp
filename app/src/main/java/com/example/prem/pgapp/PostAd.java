@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.security.acl.Owner;
 import java.util.Map;
 
 public class PostAd extends AppCompatActivity implements View.OnClickListener {
@@ -51,6 +53,7 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
     private Uri filePath;
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
+    private Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,9 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         imageButtonPG=findViewById(R.id.imageButtonPG);
         postAdSubmit.setOnClickListener(this);
         imageButtonPG.setOnClickListener(this);
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -88,11 +94,17 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         switch (item.getItemId())
         {
             case R.id.menuLogout:
-                finish();
-                Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                intent=new Intent(getApplicationContext(),LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(new Intent(intent));
+                finish();
                 FirebaseAuth.getInstance().signOut();
+                return true;
+            case android.R.id.home:
+                intent = new Intent(this, OwnerHomeDrawer.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

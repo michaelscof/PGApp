@@ -231,10 +231,10 @@ public class ViewPG extends AppCompatActivity
             recyclerView.setAdapter(adapter1);
 
         } else if (id == R.id.nav_logout) {
-            finish();
             Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(new Intent(intent));
+            finish();
             FirebaseAuth.getInstance().signOut();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

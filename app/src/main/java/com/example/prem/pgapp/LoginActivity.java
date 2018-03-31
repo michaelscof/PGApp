@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 {
                     Intent intent;
                     if(loginSpinner.getSelectedItemId()==0 && databaseReference.child("Owners/"+firebaseAuth.getUid())!=null)
-                        intent=new Intent(LoginActivity.this,PostAd.class);
+                        intent=new Intent(LoginActivity.this,OwnerHomeDrawer.class);
                     else
                         intent=new Intent(LoginActivity.this,ViewPG.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

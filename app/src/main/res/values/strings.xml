@@ -24,4 +24,5 @@
         <item>Owner</item>
         <item>Tenant</item>
     </string-array>
+    <string name="title_activity_owner_home_drawer">Owner Home</string>
 </resources>
