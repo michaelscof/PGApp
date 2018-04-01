@@ -176,7 +176,9 @@ public class ViewPG extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            // Handle the camera action
+            Intent intent=new Intent(this,EditProfile.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_boys) {
             DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
             query = databaseReferencePG1.orderByChild("boys").equalTo(true);

@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SplashActivity extends AppCompatActivity {
-    private static int SPLASH_ACTIVITY_TIMEOUT=3500;
+    private static int SPLASH_ACTIVITY_TIMEOUT=2500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

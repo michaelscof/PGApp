@@ -24,11 +24,18 @@
             android:label="View PGs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FirstPage" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:label="Login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".UploadImage" />
-        <activity android:name=".PostAd" />
+        <activity android:name=".PostAd"
+            android:label="Post Ad"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -42,12 +49,8 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".MapsActivityUser" />
-        <activity android:name=".SplashActivity" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".SplashActivity">
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
         </activity>
         <activity
             android:name=".SinglePGActivity"
@@ -66,9 +69,13 @@
             android:label="Change Password" />
         <activity
             android:name=".ViewProperties"
-            android:label="View Properties"></activity>
-        <activity android:name=".ModifyAd"
-            android:label="Modify Ad"></activity>
+            android:label="View Properties" />
+        <activity
+            android:name=".ModifyAd"
+            android:label="Modify Ad" />
+        <activity android:name=".EditProfile"
+            android:label="Edit Profile">
+        </activity>
     </application>
 
 </manifest>
