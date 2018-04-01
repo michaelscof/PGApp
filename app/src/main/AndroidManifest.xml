@@ -25,11 +25,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FirstPage" />
         <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".UploadImage" />
@@ -47,7 +42,13 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".MapsActivityUser" />
-        <activity android:name=".SplashActivity" />
+        <activity android:name=".SplashActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name=".SinglePGActivity"
             android:label="View this PG"
@@ -63,9 +64,11 @@
         <activity
             android:name=".ChangePassword"
             android:label="Change Password" />
-        <activity android:name=".ViewProperties"
-            android:theme="@style/AppTheme">
-        </activity>
+        <activity
+            android:name=".ViewProperties"
+            android:label="View Properties"></activity>
+        <activity android:name=".ModifyAd"
+            android:label="Modify Ad"></activity>
     </application>
 
 </manifest>

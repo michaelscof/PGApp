@@ -2,7 +2,6 @@ package com.example.prem.pgapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.drm.DrmManagerClient;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -13,9 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -24,7 +21,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,32 +30,36 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.security.acl.Owner;
-import java.util.Map;
 
-public class PostAd extends AppCompatActivity implements View.OnClickListener {
+public class ModifyAd extends AppCompatActivity implements View.OnClickListener {
     private static final int PICK_IMAGE_REQUEST = 123;
-    private Button postAdSubmit;
     private ImageButton imageButtonPG;
+    private Uri filePath;
     private EditText editTextName,editTextAddress,editTextLocation,editTextLandmark,editTextMobile,editTextSeater,editTextPrice;
     private RadioButton radioButtonBoys,radioButtonGirls;
-    private CheckBox checkBoxAc,checkBoxLaundry,checkBoxWiFi,checkBoxMaid,checkBoxFood;
-    private int pgcount,seater,price;
-    private boolean ac,maid,laundry,wifi,food,boys,girls;
-    private FirebaseUser firebaseUser;
-    private String name,address,location,landmark,contact,uniqueid,imagePath;
-    private Uri filePath;
+    private String name;
+    private String address;
+    private String location;
+    private String landmark;
+    private String contact;
+    private String imagePath;
+    private String pgkey;
     private DatabaseReference databaseReference;
-    private StorageReference storageReference;
-    private Intent intent;
+    private CheckBox checkBoxAc,checkBoxLaundry,checkBoxWiFi,checkBoxMaid,checkBoxFood;
+    private int seater,price;
+    private boolean ac,maid,laundry,wifi,food,boys,girls;
+    private StorageReference picReference,storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_ad);
+        setContentView(R.layout.activity_modify_ad);
         storageReference= FirebaseStorage.getInstance().getReference();
-        postAdSubmit=findViewById(R.id.postAdSubmit);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         editTextName=findViewById(R.id.postAdName);
         editTextAddress=findViewById(R.id.postAdAddress);
         editTextLandmark=findViewById(R.id.postAdLandmark);
@@ -75,107 +75,49 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         checkBoxMaid=findViewById(R.id.postAdMaid);
         checkBoxWiFi=findViewById(R.id.postAdWifi);
         imageButtonPG=findViewById(R.id.imageButtonPG);
-        postAdSubmit.setOnClickListener(this);
         imageButtonPG.setOnClickListener(this);
-        ActionBar actionBar=getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
+        pgkey = getIntent().getExtras().getString("pgkey");
+        databaseReference= FirebaseDatabase.getInstance().getReference("PGs/"+pgkey);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ac=dataSnapshot.child("ac").getValue(Boolean.class);
+                food=dataSnapshot.child("food").getValue(Boolean.class);
+                maid=dataSnapshot.child("maid").getValue(Boolean.class);
+                wifi=dataSnapshot.child("wifi").getValue(Boolean.class);
+                laundry=dataSnapshot.child("laundry").getValue(Boolean.class);
+                boys=dataSnapshot.child("boys").getValue(Boolean.class);
+                girls=dataSnapshot.child("girls").getValue(Boolean.class);
+                seater=dataSnapshot.child("seater").getValue(Integer.class);
+                price=dataSnapshot.child("price").getValue(Integer.class);
+                name=dataSnapshot.child("name").getValue(String.class);
+                address=dataSnapshot.child("address").getValue(String.class);
+                contact=dataSnapshot.child("contact").getValue(String.class);
+                location=dataSnapshot.child("location").getValue(String.class);
+                landmark=dataSnapshot.child("landmark").getValue(String.class);
+                imagePath=dataSnapshot.child("image").getValue(String.class);
+                filePath=Uri.parse(imagePath);
+                checkBoxAc.setChecked(ac);
+                checkBoxFood.setChecked(food);
+                checkBoxLaundry.setChecked(laundry);
+                checkBoxMaid.setChecked(maid);
+                checkBoxWiFi.setChecked(wifi);
+                radioButtonBoys.setChecked(boys);
+                radioButtonGirls.setChecked(girls);
+                editTextAddress.setText(address);
+                editTextName.setText(name);
+                editTextLandmark.setText(landmark);
+                editTextLocation.setText(location);
+                editTextMobile.setText(contact);
+                editTextPrice.setText(String.valueOf(price));
+                editTextSeater.setText(String.valueOf(seater));
+                Picasso.with(getApplicationContext()).load(filePath).resize(200,200).into(imageButtonPG);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.view_pg, menu);
-        menu.findItem(R.id.buttonAdd).setVisible(true);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.menuLogout:
-                intent=new Intent(getApplicationContext(),LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(new Intent(intent));
-                finish();
-                FirebaseAuth.getInstance().signOut();
-                return true;
-            case android.R.id.home:
-                intent = new Intent(this, OwnerHomeDrawer.class);
-                startActivity(intent);
-                finish();
-                return true;
-            case R.id.buttonAdd:
-                getValues();
-                if(filePath!=null)
-                {
-                    final ProgressDialog progressDialog=new ProgressDialog(this);
-                    progressDialog.setMessage("Uploading profile photo!!");
-                    progressDialog.show();
-                    StorageReference picReference=storageReference.child("PGs/"+uniqueid);
-                    picReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Uri downloadUrl=taskSnapshot.getDownloadUrl();
-                            imagePath=downloadUrl.toString();
-                            System.out.println("Image path:"+imagePath);
-                            PostAdDB postAdDB=new PostAdDB(name,address,location,landmark,imagePath,seater,price,contact,boys,girls,ac,wifi,food,maid,laundry,firebaseUser.getUid());
-                            databaseReference.child(uniqueid).setValue(postAdDB);
-                            databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
-                            OwnerPGCount ownerPGCount=new OwnerPGCount(pgcount);
-                            databaseReference.child(firebaseUser.getUid()).setValue(ownerPGCount);
-                            Intent intent=new Intent(getApplicationContext(),OwnerHomeDrawer.class);
-                            startActivity(intent);
-                            finish();
-                            Toast.makeText(getApplicationContext(),"Ad posted",Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-                                }
-                            })
-                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                    double progress=(100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
-                                    progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                                }
-                            });
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Upload failed!!",Toast.LENGTH_LONG).show();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser!=null)
-        {
-            final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    pgcount=dataSnapshot.child(firebaseUser.getUid().toString()).child("pgCount").getValue(Integer.class);
-                    pgcount=pgcount+1;
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
+            }
+        });
     }
     public void getValues()
     {
@@ -193,25 +135,76 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         landmark=editTextLandmark.getText().toString();
         location=editTextLocation.getText().toString();
         address=editTextAddress.getText().toString();
-        databaseReference=FirebaseDatabase.getInstance().getReference("PGs");
-        uniqueid=databaseReference.push().getKey();
-    }
-    public void postAd()
-    {
-
+        databaseReference= FirebaseDatabase.getInstance().getReference("PGs");
     }
     @Override
-    public void onClick(View view) {
-        if(view==postAdSubmit)
-        {
-            postAd();
-        }
-        if(view==imageButtonPG)
-        {
-            showFileChooser();
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_pg, menu);
+        menu.findItem(R.id.buttonAdd).setVisible(true);
+        return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id=item.getItemId();
+        switch (id)
+        {
+            case android.R.id.home:
+                final Intent intent = new Intent(this, ViewProperties.class);
+                startActivity(intent);
+                finish();
+                return true;
+            case R.id.buttonAdd:
+                getValues();
+                if(filePath!=null)
+                {
+                    final ProgressDialog progressDialog=new ProgressDialog(this);
+                    progressDialog.setMessage("Updating PG pic!!");
+                    progressDialog.show();
+                    picReference=storageReference.child("PGs/"+pgkey);
+                    picReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Uri downloadUrl=taskSnapshot.getDownloadUrl();
+                            imagePath=downloadUrl.toString();
+                            System.out.println("Image path:"+imagePath);
+                            Toast.makeText(getApplicationContext(),"PG Details modified",Toast.LENGTH_SHORT).show();
+                            PostAdDB postAdDB=new PostAdDB(name,address,location,landmark,imagePath,seater,price,contact,boys,girls,ac,wifi,food,maid,laundry,FirebaseAuth.getInstance().getUid());
+                            databaseReference.child(pgkey).setValue(postAdDB);
+                            Intent intent=new Intent(getApplicationContext(),OwnerHomeDrawer.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(),"PG Details modified",Toast.LENGTH_SHORT).show();
+                                    PostAdDB postAdDB=new PostAdDB(name,address,location,landmark,imagePath,seater,price,contact,boys,girls,ac,wifi,food,maid,laundry,FirebaseAuth.getInstance().getUid());
+                                    databaseReference.child(pgkey).setValue(postAdDB);
+                                    Intent intent=new Intent(getApplicationContext(),OwnerHomeDrawer.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress=(100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                                    progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                                }
+                            });
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Upload failed!!",Toast.LENGTH_LONG).show();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
@@ -225,18 +218,15 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
             }
         }
     }
-    private void uploadFile()
-    {
+    @Override
+    public void onClick(View v) {
+        if(v==imageButtonPG)
+            showFileChooser();
     }
     private void showFileChooser() {
         Intent intent=new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Picture"),PICK_IMAGE_REQUEST);
-    }
-
-    public void Facilities(View view)
-    {
-
     }
 }

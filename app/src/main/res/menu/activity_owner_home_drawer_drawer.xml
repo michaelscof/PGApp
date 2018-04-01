@@ -9,10 +9,6 @@
             android:icon="@drawable/ic_launcher_background"
             android:title="Post Ad" />
         <item
-            android:id="@+id/nav_modify_ad"
-            android:icon="@drawable/ic_ac"
-            android:title="Modify Ad" />
-        <item
             android:id="@+id/nav_view_properties"
             android:icon="@drawable/ic_no_maid"
             android:title="View Properties" />

@@ -31,7 +31,7 @@ public class SplashActivity extends AppCompatActivity {
                     if(databaseReference.child("Owners").child(String.valueOf(user))==null)
                         intent=new Intent(getApplicationContext(),ViewPG.class);
                     else
-                        intent=new Intent(getApplicationContext(),PostAd.class);
+                        intent=new Intent(getApplicationContext(),OwnerHomeDrawer.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(new Intent(intent));
                     finish();

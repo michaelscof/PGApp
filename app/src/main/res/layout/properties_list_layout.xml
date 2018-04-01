@@ -76,13 +76,13 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <ImageButton
-                    android:layout_width="80dp"
+                    android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:id="@+id/buttonModify"
                     android:src="@drawable/edit_icon"
                     android:background="#ffffff"
                     android:layout_below="@id/textViewPrice"
-                    android:layout_marginRight="200dp" />
+                    android:layout_marginRight="230dp" />
                 <ImageButton
                 android:layout_width="80dp"
                 android:layout_height="50dp"

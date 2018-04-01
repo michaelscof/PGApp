@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.prem.pgapp.PostAd">
+    tools:context="com.example.prem.pgapp.ModifyAd">
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -87,27 +87,27 @@
                 android:textColor="#000000"
                 android:textSize="15sp"
                 android:inputType="number"/>
-          <!--  <Button
-                android:id="@+id/seaterplus"
-                android:layout_width="40dp"
-                android:layout_height="35dp"
-                android:background="@drawable/round"
-                android:elevation="30dp"
-                android:text="+"
-                android:textColor="@android:color/background_light"
-                android:translationZ="10dp" />
+            <!--  <Button
+                  android:id="@+id/seaterplus"
+                  android:layout_width="40dp"
+                  android:layout_height="35dp"
+                  android:background="@drawable/round"
+                  android:elevation="30dp"
+                  android:text="+"
+                  android:textColor="@android:color/background_light"
+                  android:translationZ="10dp" />
 
-            <Button
-                android:id="@+id/seaterminus"
-                android:layout_width="40dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/round"
-                android:elevation="30dp"
-                android:text="-"
-                android:textColor="@android:color/background_light"
-                android:translationZ="10dp" />
--->
+              <Button
+                  android:id="@+id/seaterminus"
+                  android:layout_width="40dp"
+                  android:layout_height="35dp"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/round"
+                  android:elevation="30dp"
+                  android:text="-"
+                  android:textColor="@android:color/background_light"
+                  android:translationZ="10dp" />
+  -->
             <EditText
                 android:id="@+id/postAdPrice"
                 android:layout_width="match_parent"
@@ -121,75 +121,76 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:text="Facilities:"
-            android:textColor="#000000"
-            android:textSize="15dp"
-            android:id="@+id/postAdFacilities"/>
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Facilities:"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:id="@+id/postAdFacilities"/>
 
-        <CheckBox
-            android:id="@+id/postAdAc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="AC" />
+                <CheckBox
+                    android:id="@+id/postAdAc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="AC" />
 
-        <CheckBox
-            android:id="@+id/postAdFood"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="Food"/>
+                <CheckBox
+                    android:id="@+id/postAdFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="Food"/>
 
-        <CheckBox
-            android:id="@+id/postAdMaid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="Maid" />
+                <CheckBox
+                    android:id="@+id/postAdMaid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="Maid" />
 
-        <CheckBox
-            android:id="@+id/postAdWifi"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="Wi-Fi" />
+                <CheckBox
+                    android:id="@+id/postAdWifi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="Wi-Fi" />
 
-        <CheckBox
-            android:id="@+id/postAdLaundry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="Laundry" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
-        <ImageButton
-            android:layout_width="190dp"
-            android:layout_height="200dp"
-            android:id="@+id/imageButtonPG"
-            android:background="@drawable/ic_photo_camera"
-            android:scaleType="centerCrop"/>
-        </LinearLayout>
+                <CheckBox
+                    android:id="@+id/postAdLaundry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="Laundry" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+                <ImageButton
+                    android:layout_width="190dp"
+                    android:layout_height="200dp"
+                    android:id="@+id/imageButtonPG"
+                    android:background="@drawable/ic_photo_camera"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -207,14 +208,14 @@
                 android:inputType="textPersonName"
                 android:textSize="15sp" />
 
-           <!--<Spinner
-                android:id="@+id/state"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="543dp" />
-       --></LinearLayout>
+            <!--<Spinner
+                 android:id="@+id/state"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="5dp"
+                 tools:layout_editor_absoluteX="8dp"
+                 tools:layout_editor_absoluteY="543dp" />
+        --></LinearLayout>
 
         <EditText
             android:id="@+id/postAdAddress"
@@ -243,25 +244,17 @@
                 android:inputType="textPostalAddress"
                 android:textSize="15sp"/>
 
-        <EditText
-            android:id="@+id/postAdMobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="0dp"
-            android:ems="10"
-            android:hint="Contact"
-            android:inputType="number"
-            android:textSize="15sp" />
-
+            <EditText
+                android:id="@+id/postAdMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="0dp"
+                android:ems="10"
+                android:hint="Contact"
+                android:inputType="number"
+                android:textSize="15sp" />
         </LinearLayout>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="150dp"
-            android:text="Submit"
-            android:id="@+id/postAdSubmit"/>
     </LinearLayout>
-
 
 </android.support.constraint.ConstraintLayout>

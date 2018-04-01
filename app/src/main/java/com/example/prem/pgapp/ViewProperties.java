@@ -35,6 +35,7 @@ public class ViewProperties extends AppCompatActivity {
     private Intent intent;
     private Query query;
     public int pgCount;
+    private DatabaseReference databaseReference;
     private FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter,adapter1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,20 @@ public class ViewProperties extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.RecyclerViewOwner);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        databaseReference=FirebaseDatabase.getInstance().getReference("Owners/"+FirebaseAuth.getInstance().getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                pgCount=dataSnapshot.child("pgCount").getValue(Integer.class);
+                pgCount--;
+                System.out.println("PGCount:"+pgCount);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         final DatabaseReference databaseReferencePG = FirebaseDatabase.getInstance().getReference("PGs");
         query = databaseReferencePG.orderByChild("ownerid").equalTo(FirebaseAuth.getInstance().getUid());
         FirebaseRecyclerOptions<PostAdDB> options =
@@ -70,19 +85,6 @@ public class ViewProperties extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                        databaseReferencePG.child(pgkey).removeValue();
-                                       DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Owners/"+FirebaseAuth.getInstance().getUid());
-                                       databaseReference.addValueEventListener(new ValueEventListener() {
-                                           @Override
-                                           public void onDataChange(DataSnapshot dataSnapshot) {
-                                               pgCount=dataSnapshot.child("pgCount").getValue(Integer.class);
-                                               pgCount--;
-                                           }
-
-                                           @Override
-                                           public void onCancelled(DatabaseError databaseError) {
-
-                                           }
-                                       });
                                        databaseReference.child("pgCount").setValue(pgCount);
                                     }
                                 })
@@ -94,14 +96,13 @@ public class ViewProperties extends AppCompatActivity {
                                 .show();
                     }
                 });
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                holder.buttonModify.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                        Intent intent=new Intent(getApplicationContext(),ModifyAd.class);
                         intent.putExtra("pgkey",pgkey);
                         startActivity(new Intent(intent));
                         finish();
-                        return;
                     }
                 });
             }
