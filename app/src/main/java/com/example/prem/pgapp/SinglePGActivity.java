@@ -136,6 +136,7 @@ public class SinglePGActivity extends AppCompatActivity implements View.OnClickL
             {
                 Intent intent=new Intent(getApplicationContext(),MapsActivityUser.class);
                 intent.putExtra("landmark",landmark);
+                intent.putExtra("pgkey",pgkey);
                 startActivity(new Intent(intent));
                 finish();
             }

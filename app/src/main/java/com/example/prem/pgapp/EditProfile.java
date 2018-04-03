@@ -134,6 +134,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         switch (id)
         {
             case android.R.id.home:
+                databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
