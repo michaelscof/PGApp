@@ -246,6 +246,146 @@ public class ViewPG extends AppCompatActivity
             finish();
             FirebaseAuth.getInstance().signOut();
         }
+        else if(id==R.id.nav_ac)
+        {
+            DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+            query = databaseReferencePG1.orderByChild("ac").equalTo(true);
+            FirebaseRecyclerOptions<PostAdDB> options1 =
+                    new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                            .setQuery(query, PostAdDB.class)
+                            .build();
+            adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                @Override
+                protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    holder.setName(model.getName());
+                    holder.setAddress(model.getAddress());
+                    holder.setType(model.isBoys());
+                    holder.setLandmark(model.getLandmark());
+                    holder.setImage(getBaseContext(),model.getImage());
+                }
+
+                @Override
+                public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.pg_list_layout, parent, false);
+                    return new PGHolder(view);
+                }
+            };
+            adapter1.startListening();
+            recyclerView.setAdapter(adapter1);
+        }
+        else if(id==R.id.nav_food)
+        {
+            DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+            query = databaseReferencePG1.orderByChild("food").equalTo(true);
+            FirebaseRecyclerOptions<PostAdDB> options1 =
+                    new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                            .setQuery(query, PostAdDB.class)
+                            .build();
+            adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                @Override
+                protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    holder.setName(model.getName());
+                    holder.setAddress(model.getAddress());
+                    holder.setType(model.isBoys());
+                    holder.setLandmark(model.getLandmark());
+                    holder.setImage(getBaseContext(),model.getImage());
+                }
+
+                @Override
+                public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.pg_list_layout, parent, false);
+                    return new PGHolder(view);
+                }
+            };
+            adapter1.startListening();
+            recyclerView.setAdapter(adapter1);
+        }
+        else if(id==R.id.nav_Maid)
+        {
+            DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+            query = databaseReferencePG1.orderByChild("maid").equalTo(true);
+            FirebaseRecyclerOptions<PostAdDB> options1 =
+                    new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                            .setQuery(query, PostAdDB.class)
+                            .build();
+            adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                @Override
+                protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    holder.setName(model.getName());
+                    holder.setAddress(model.getAddress());
+                    holder.setType(model.isBoys());
+                    holder.setLandmark(model.getLandmark());
+                    holder.setImage(getBaseContext(),model.getImage());
+                }
+
+                @Override
+                public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.pg_list_layout, parent, false);
+                    return new PGHolder(view);
+                }
+            };
+            adapter1.startListening();
+            recyclerView.setAdapter(adapter1);
+        }
+        else if(id==R.id.nav_wifi)
+        {
+            DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+            query = databaseReferencePG1.orderByChild("wifi").equalTo(true);
+            FirebaseRecyclerOptions<PostAdDB> options1 =
+                    new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                            .setQuery(query, PostAdDB.class)
+                            .build();
+            adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                @Override
+                protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    holder.setName(model.getName());
+                    holder.setAddress(model.getAddress());
+                    holder.setType(model.isBoys());
+                    holder.setLandmark(model.getLandmark());
+                    holder.setImage(getBaseContext(),model.getImage());
+                }
+
+                @Override
+                public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.pg_list_layout, parent, false);
+                    return new PGHolder(view);
+                }
+            };
+            adapter1.startListening();
+            recyclerView.setAdapter(adapter1);
+        }
+        else if(id==R.id.nav_laundry)
+        {
+            DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+            query = databaseReferencePG1.orderByChild("laundry").equalTo(true);
+            FirebaseRecyclerOptions<PostAdDB> options1 =
+                    new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                            .setQuery(query, PostAdDB.class)
+                            .build();
+            adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                @Override
+                protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    holder.setName(model.getName());
+                    holder.setAddress(model.getAddress());
+                    holder.setType(model.isBoys());
+                    holder.setLandmark(model.getLandmark());
+                    holder.setImage(getBaseContext(),model.getImage());
+                }
+
+                @Override
+                public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.pg_list_layout, parent, false);
+                    return new PGHolder(view);
+                }
+            };
+            adapter1.startListening();
+            recyclerView.setAdapter(adapter1);
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

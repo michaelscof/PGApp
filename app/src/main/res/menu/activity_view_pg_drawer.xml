@@ -22,17 +22,30 @@
             android:title="Logout" />
     </group>
 
- <!--   <item android:title="Filter">
+    <item android:title="Facilities">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:id="@+id/nav_ac"
+                android:icon="@drawable/ic_ac"
                 android:title="AC" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Type" />
+                android:id="@+id/nav_food"
+                android:icon="@drawable/ic_food"
+                android:title="Food" />
+            <item
+                android:id="@+id/nav_Maid"
+                android:icon="@drawable/ic_maid"
+                android:title="Maid" />
+            <item
+                android:id="@+id/nav_wifi"
+                android:icon="@drawable/ic_wifi"
+                android:title="Wifi" />
+            <item
+                android:id="@+id/nav_laundry"
+                android:icon="@drawable/ic_laundry"
+                android:title="Laundry">
+            </item>
         </menu>
-    </item>-->
+    </item>
 
 </menu>
