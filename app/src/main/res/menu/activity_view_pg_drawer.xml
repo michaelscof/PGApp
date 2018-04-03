@@ -9,6 +9,10 @@
             android:icon="@drawable/edit_icon"
             android:title="Profile" />
         <item
+            android:id="@+id/nav_all"
+            android:icon="@drawable/ic_all"
+            android:title="All PGs" />
+        <item
             android:id="@+id/nav_boys"
             android:icon="@drawable/user_person"
             android:title="Boys PG" />
@@ -16,6 +20,10 @@
             android:id="@+id/nav_girls"
             android:icon="@drawable/ic_woman"
             android:title="Girls PG" />
+        <item
+            android:id="@+id/nav_change_password"
+            android:icon="@drawable/ic_password"
+            android:title="Change Password" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_user_logout"

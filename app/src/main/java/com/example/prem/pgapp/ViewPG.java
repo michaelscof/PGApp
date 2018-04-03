@@ -358,6 +358,17 @@ public class ViewPG extends AppCompatActivity
             adapter1.startListening();
             recyclerView.setAdapter(adapter1);
         }
+        else if(id==R.id.nav_all)
+        {
+            adapter.startListening();
+            recyclerView.setAdapter(adapter);
+        }
+        else if (id==R.id.nav_change_password)
+        {
+            Intent intent=new Intent(this,ChangePassword.class);
+            startActivity(intent);
+            finish();
+        }
         else if(id==R.id.nav_laundry)
         {
             DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");

@@ -29,6 +29,7 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
     private EditText changePassword, confirmPassword;
     String password, cpassword;
     private Button submitButton;
+    private Intent intent;
     public String oldpassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +49,24 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                Intent intent = new Intent(this, OwnerHomeDrawer.class);
-                startActivity(intent);
-                finish();
+                final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(FirebaseAuth.getInstance().getUid()))
+                            intent = new Intent(getApplicationContext(), OwnerHomeDrawer.class);
+                        else
+                            intent = new Intent(getApplicationContext(), ViewPG.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 return true;
         }
         return super.onOptionsItemSelected(item);
