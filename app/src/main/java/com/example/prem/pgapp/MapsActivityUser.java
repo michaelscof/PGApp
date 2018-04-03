@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,7 +22,7 @@ import java.util.List;
 public class MapsActivityUser extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
+    private String landmark;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,11 @@ public class MapsActivityUser extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        landmark=getIntent().getExtras().getString("landmark");
+        System.out.println(landmark);
+        /*ActionBar actionBar=getSu();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);*/
     }
 
 
@@ -40,7 +45,7 @@ public class MapsActivityUser extends FragmentActivity implements OnMapReadyCall
             return;
         }
         mMap.setMyLocationEnabled(true);
-        String location="Ganga Gate,MNNIT,Allahabad";
+        String location=landmark+",Allahabad";
         Geocoder geocoder=new Geocoder(this);
         List<Address> addressList=null;
         try {

@@ -24,8 +24,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +37,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -58,7 +63,7 @@ public class ViewPG extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
         View header = navigationView.getHeaderView(0);
         imageViewCust = header.findViewById(R.id.imageViewCust);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -90,7 +95,9 @@ public class ViewPG extends AppCompatActivity
                 textViewEmail.setText(email);
                 String name = dataSnapshot.child("name").getValue(String.class);
                 textViewName.setText(name);
-                Picasso.with(getBaseContext()).load("https://firebasestorage.googleapis.com/v0/b/pgapp-a356c.appspot.com/o/UsersProfilePic%2Fpremkagrani%40gmail.com?alt=media&token=5bcae97f-3605-4718-abc5-811e9dea9d72").resize(200,200).transform(new CircleTransform()).centerCrop().into(imageViewCust);
+                final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                final StorageReference picReference=storageReference.child("UsersProfilePic/"+email);
+                Picasso.with(getBaseContext()).load("https://firebasestorage.googleapis.com/v0/b/pgapp-a356c.appspot.com/o/UsersProfilePic%2Fpremkagrani%40gmail.com?alt=media&token=8beedfc0-f87a-48eb-ac7f-4c5ff4465ccd").resize(200,200).transform(new CircleTransform()).centerCrop().into(imageViewCust);
             }
 
             @Override

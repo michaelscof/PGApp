@@ -23,11 +23,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 public class OwnerHomeDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private TextView ownerName,ownerEmail,noOfPGs;
-    private ImageView ownerPic;
+    private TextView ownerName,ownerEmail,noOfPGs,headerName,headerEmail;
+    private ImageView ownerPic,headerPic;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +43,33 @@ public class OwnerHomeDrawer extends AppCompatActivity
         ownerEmail=findViewById(R.id.ownerEmail);
         noOfPGs=findViewById(R.id.ownerProperties);
         ownerPic=findViewById(R.id.ownerImageView);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        headerPic=header.findViewById(R.id.imageViewUser);
+        headerName=header.findViewById(R.id.textViewName);
+        headerEmail=header.findViewById(R.id.textViewEmail);
+        databaseReference=FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String email = dataSnapshot.child("email").getValue(String.class);
+                headerEmail.setText(email);
+                String name = dataSnapshot.child("name").getValue(String.class);
+                headerName.setText(name);
+                final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                final StorageReference picReference=storageReference.child("UsersProfilePic/"+email);
+                Picasso.with(getBaseContext()).load("https://firebasestorage.googleapis.com/v0/b/pgapp-a356c.appspot.com/o/UsersProfilePic%2Fpremkagrani%40gmail.com?alt=media&token=8beedfc0-f87a-48eb-ac7f-4c5ff4465ccd").resize(200,200).transform(new CircleTransform()).centerCrop().into(headerPic);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         if(user!=null)
         {
-            DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Users/"+user);
+            databaseReference= FirebaseDatabase.getInstance().getReference("Users/"+user);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,7 +113,7 @@ public class OwnerHomeDrawer extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
