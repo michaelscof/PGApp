@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -519,19 +520,102 @@ public class ViewPG extends AppCompatActivity
         {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             final EditText editTextLocation = new EditText(getApplicationContext());
-            editTextLocation.setHeight(200);
-            editTextLocation.setWidth(340);
             editTextLocation.setGravity(Gravity.CENTER);
-            alert.setMessage("Location");
             alert.setTitle("Enter Location");
             alert.setView(editTextLocation);
             alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
+                    DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+                    String loc=editTextLocation.getText().toString();
+                    query = databaseReferencePG1.orderByChild("location").equalTo(loc);
+                    FirebaseRecyclerOptions<PostAdDB> options1 =
+                            new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                                    .setQuery(query, PostAdDB.class)
+                                    .build();
+                    adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                        @Override
+                        protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                            holder.setName(model.getName());
+                            holder.setAddress(model.getLocation());
+                            holder.setType(model.isBoys());
+                            holder.setLandmark("\u20B9"+ model.getPrice());
+                            holder.setImage(getBaseContext(),model.getImage());
+                            final String pgkey=getRef(position).getKey();
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                                    intent.putExtra("pgkey",pgkey);
+                                    startActivity(new Intent(intent));
+                                    finish();
+                                    return;
+                                }
+                            });
+                        }
 
+                        @Override
+                        public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                            View view = LayoutInflater.from(parent.getContext())
+                                    .inflate(R.layout.pg_list_layout, parent, false);
+                            return new PGHolder(view);
+                        }
+                    };
+                    adapter1.startListening();
+                    recyclerView.setAdapter(adapter1);
                 }
             });
+            alert.show();
+        }
+        else if(id==R.id.nav_price)
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final EditText editTextPrice = new EditText(getApplicationContext());
+            editTextPrice.setHeight(200);
+            editTextPrice.setWidth(340);
+            editTextPrice.setGravity(Gravity.CENTER);
+            alert.setTitle("Enter your Budget");
+            alert.setView(editTextPrice);
+            alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    DatabaseReference databaseReferencePG1=FirebaseDatabase.getInstance().getReference("PGs");
+                    double budget=Double.parseDouble(editTextPrice.getText().toString());
+                    query = databaseReferencePG1.orderByChild("price").endAt(budget);
+                    FirebaseRecyclerOptions<PostAdDB> options1 =
+                            new FirebaseRecyclerOptions.Builder<PostAdDB>()
+                                    .setQuery(query, PostAdDB.class)
+                                    .build();
+                    adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
+                        @Override
+                        protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                            holder.setName(model.getName());
+                            holder.setAddress(model.getAddress());
+                            holder.setType(model.isBoys());
+                            holder.setLandmark("\u20B9"+ model.getPrice());
+                            holder.setImage(getBaseContext(),model.getImage());
+                            final String pgkey=getRef(position).getKey();
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                                    intent.putExtra("pgkey",pgkey);
+                                    startActivity(new Intent(intent));
+                                    finish();
+                                    return;
+                                }
+                            });
+                        }
 
-
+                        @Override
+                        public PGHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                            View view = LayoutInflater.from(parent.getContext())
+                                    .inflate(R.layout.pg_list_layout, parent, false);
+                            return new PGHolder(view);
+                        }
+                    };
+                    adapter1.startListening();
+                    recyclerView.setAdapter(adapter1);
+                }
+            });
             alert.show();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
