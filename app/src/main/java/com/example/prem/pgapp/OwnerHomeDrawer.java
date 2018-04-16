@@ -30,6 +30,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.security.acl.Owner;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class OwnerHomeDrawer extends AppCompatActivity
@@ -64,12 +66,17 @@ public class OwnerHomeDrawer extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild(user))
                     {
-                    image1=dataSnapshot.child(FirebaseAuth.getInstance().getUid()).child("image").getValue(String.class);
-                    Uri filePath=Uri.parse(image1);
-                    Glide.with(getApplicationContext()).load(filePath).into(ownerPic);
-                    Picasso.with(getBaseContext()).load(filePath).resize(200,200).transform(new CircleTransform()).centerCrop().into(headerPic);
-                       // Glide.with(getApplicationContext()).load(filePath).into(headerPic);
+                       image1=dataSnapshot.child(FirebaseAuth.getInstance().getUid()).child("image").getValue(String.class);
+                        Uri filePath=Uri.parse(image1);
+                        Glide.with(getApplicationContext()).load(filePath).into(ownerPic);
+                        Picasso.with(getBaseContext()).load(filePath).resize(200,200).transform(new CircleTransform()).centerCrop().into(headerPic);
                     }
+                    else
+                    {
+                        headerPic.setImageResource(R.mipmap.ic_launcher_round);
+                        ownerPic.setImageResource(R.mipmap.ic_launcher_round);
+                    }
+
             }
 
             @Override
@@ -148,6 +155,9 @@ public class OwnerHomeDrawer extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            Intent intent = new Intent(getApplicationContext(), OwnerHomeDrawer.class);
+            startActivity(intent);
+            finish();
             super.onBackPressed();
         }
     }
@@ -155,7 +165,6 @@ public class OwnerHomeDrawer extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_post_ad) {

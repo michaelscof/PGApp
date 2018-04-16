@@ -47,9 +47,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +60,6 @@ public class ViewPG extends AppCompatActivity
     private TextView textViewEmail,textViewName;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
-    private MaterialSearchView searchView;
     private Query query;
     public String user,image1,pass;
     FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter;
@@ -74,8 +71,6 @@ public class ViewPG extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //pass=getIntent().getExtras().getString("password");
-        //Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
         View header = navigationView.getHeaderView(0);
         imageViewCust = header.findViewById(R.id.imageViewCust);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -84,20 +79,11 @@ public class ViewPG extends AppCompatActivity
         textViewName =  header.findViewById(R.id.textViewName);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "App developed by Prem Kagrani", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Profile/"+FirebaseAuth.getInstance().getUid());
@@ -195,6 +181,9 @@ public class ViewPG extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            Intent intent = new Intent(getApplicationContext(), ViewPG.class);
+            startActivity(intent);
+            finish();
             super.onBackPressed();
         }
     }
@@ -239,7 +228,7 @@ public class ViewPG extends AppCompatActivity
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     final String pgkey=getRef(position).getKey();
                     holder.setName(model.getName());
-                    holder.setAddress(model.getAddress());
+                    holder.setAddress(model.getLocation());
                     holder.setType(model.isBoys());
                     holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
@@ -276,7 +265,7 @@ public class ViewPG extends AppCompatActivity
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
                     final String pgkey=getRef(position).getKey();
-                    holder.setAddress(model.getAddress());
+                    holder.setAddress(model.getLocation());
                     holder.setType(model.isBoys());
                     holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
@@ -322,7 +311,7 @@ public class ViewPG extends AppCompatActivity
                 @Override
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
-                    holder.setAddress(model.getAddress());
+                    holder.setAddress(model.getLocation());
                     holder.setType(model.isBoys());
                     final String pgkey=getRef(position).getKey();
                     holder.setLandmark("\u20B9"+ model.getPrice());
@@ -361,7 +350,7 @@ public class ViewPG extends AppCompatActivity
                 @Override
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
-                    holder.setAddress(model.getAddress());
+                    holder.setAddress(model.getLocation());
                     holder.setType(model.isBoys());
                     final String pgkey=getRef(position).getKey();
                     holder.setLandmark("\u20B9"+ model.getPrice());
@@ -400,7 +389,7 @@ public class ViewPG extends AppCompatActivity
                 @Override
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
-                    holder.setAddress(model.getAddress());
+                    holder.setAddress(model.getLocation());
                     holder.setType(model.isBoys());
                     final String pgkey=getRef(position).getKey();
                     holder.setLandmark("\u20B9"+ model.getPrice());
@@ -439,7 +428,7 @@ public class ViewPG extends AppCompatActivity
                 @Override
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
-                    holder.setAddress(model.getAddress());
+                    holder.setAddress(model.getLocation());
                     holder.setType(model.isBoys());
                     holder.setLandmark("\u20B9"+ model.getPrice());
                     final String pgkey=getRef(position).getKey();
@@ -489,7 +478,7 @@ public class ViewPG extends AppCompatActivity
                 @Override
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
-                    holder.setAddress(model.getAddress());
+                    holder.setAddress(model.getLocation());
                     holder.setType(model.isBoys());
                     holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
@@ -588,7 +577,7 @@ public class ViewPG extends AppCompatActivity
                         @Override
                         protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                             holder.setName(model.getName());
-                            holder.setAddress(model.getAddress());
+                            holder.setAddress(model.getLocation());
                             holder.setType(model.isBoys());
                             holder.setLandmark("\u20B9"+ model.getPrice());
                             holder.setImage(getBaseContext(),model.getImage());

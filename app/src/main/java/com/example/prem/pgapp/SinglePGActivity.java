@@ -32,6 +32,7 @@ public class SinglePGActivity extends AppCompatActivity implements View.OnClickL
     private Button buttonCall;
     private DatabaseReference databaseReference;
     private String contact,landmark;
+    public String owner,ownerid;
     private FirebaseUser firebaseUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +93,9 @@ public class SinglePGActivity extends AppCompatActivity implements View.OnClickL
                 else
                     textViewType.setText("Girls");
                 String name=dataSnapshot.child("name").getValue(String.class);
-                String location=dataSnapshot.child("location").getValue(String.class);
+                String location=dataSnapshot.child("address").getValue(String.class);
                 int price=dataSnapshot.child("price").getValue(Integer.class);
+                ownerid=dataSnapshot.child("ownerid").getValue(String.class);
                 textViewName.setText(name);
                 textViewLocation.setText(location);
                 textViewPrice.setText("\u20B9 "+String.valueOf(price));
@@ -101,6 +103,19 @@ public class SinglePGActivity extends AppCompatActivity implements View.OnClickL
                 Picasso.with(getBaseContext()).load(Uri.parse(imagePath)).into(imageViewPG);
                 contact=dataSnapshot.child("contact").getValue(String.class);
                 landmark=dataSnapshot.child("landmark").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        databaseReference=FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                owner=dataSnapshot.child(ownerid).child("name").getValue(String.class);
+                buttonCall.setText("Call "+owner);
             }
 
             @Override
@@ -142,4 +157,12 @@ public class SinglePGActivity extends AppCompatActivity implements View.OnClickL
                 finish();
             }
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), ViewPG.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
+    }
+
 }

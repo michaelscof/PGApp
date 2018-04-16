@@ -152,4 +152,11 @@ public class ViewProperties extends AppCompatActivity {
         super.onStart();
         adapter.startListening();
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), OwnerHomeDrawer.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
+    }
 }

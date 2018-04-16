@@ -233,4 +233,11 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
     {
 
     }
+    @Override
+    public void onBackPressed() {
+        intent = new Intent(getApplicationContext(), OwnerHomeDrawer.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
+    }
 }

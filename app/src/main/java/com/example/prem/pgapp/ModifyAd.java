@@ -230,4 +230,11 @@ public class ModifyAd extends AppCompatActivity implements View.OnClickListener 
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Picture"),PICK_IMAGE_REQUEST);
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), ViewProperties.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
+    }
 }

@@ -157,4 +157,30 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         changePassword();
     }
+
+    @Override
+    public void onBackPressed() {
+        final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
+        databaseReference.keepSynced(true);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(FirebaseAuth.getInstance().getUid()))
+                    intent = new Intent(getApplicationContext(), OwnerHomeDrawer.class);
+                else
+                    intent = new Intent(getApplicationContext(), ViewPG.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
+    }
 }

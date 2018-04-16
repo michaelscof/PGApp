@@ -106,7 +106,8 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                     radioButtonFemale.setChecked(female);
                     radioButtonMale.setChecked(male);
                     radioButtonMarried.setChecked(married);
-                    radioButtonSingle.setChecked(single);
+                    System.out.println(imagePath);
+                    radioButtonSingle.setChecked(true);
                     if(imagePath!=null){
                     filePath=Uri.parse(imagePath);
                     Picasso.with(getApplicationContext()).load(filePath).into(imageViewProfile);
@@ -321,5 +322,28 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             intent = new Intent();
         }
         super.startActivityForResult(intent, requestCode);
+    }
+    @Override
+    public void onBackPressed() {
+        final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
+        databaseReference.keepSynced(true);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(FirebaseAuth.getInstance().getUid()))
+                    intent = new Intent(getApplicationContext(), OwnerHomeDrawer.class);
+                else
+                    intent = new Intent(getApplicationContext(), ViewPG.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        super.onBackPressed();
     }
 }
