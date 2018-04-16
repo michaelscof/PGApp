@@ -59,7 +59,6 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_ad);
         storageReference= FirebaseStorage.getInstance().getReference();
-        postAdSubmit=findViewById(R.id.postAdSubmit);
         editTextName=findViewById(R.id.postAdName);
         editTextAddress=findViewById(R.id.postAdAddress);
         editTextLandmark=findViewById(R.id.postAdLandmark);
@@ -75,7 +74,6 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
         checkBoxMaid=findViewById(R.id.postAdMaid);
         checkBoxWiFi=findViewById(R.id.postAdWifi);
         imageButtonPG=findViewById(R.id.imageButtonPG);
-        postAdSubmit.setOnClickListener(this);
         imageButtonPG.setOnClickListener(this);
         ActionBar actionBar=getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -202,10 +200,6 @@ public class PostAd extends AppCompatActivity implements View.OnClickListener {
     }
     @Override
     public void onClick(View view) {
-        if(view==postAdSubmit)
-        {
-            postAd();
-        }
         if(view==imageButtonPG)
         {
             showFileChooser();

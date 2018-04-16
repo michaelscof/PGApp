@@ -78,6 +78,7 @@ public class ModifyAd extends AppCompatActivity implements View.OnClickListener 
         imageButtonPG.setOnClickListener(this);
         pgkey = getIntent().getExtras().getString("pgkey");
         databaseReference= FirebaseDatabase.getInstance().getReference("PGs/"+pgkey);
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -188,7 +188,8 @@
             android:layout_height="200dp"
             android:id="@+id/imageButtonPG"
             android:background="@drawable/ic_photo_camera"
-            android:scaleType="centerCrop"/>
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"/>
         </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -255,12 +256,6 @@
             android:textSize="15sp" />
 
         </LinearLayout>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="150dp"
-            android:text="Submit"
-            android:id="@+id/postAdSubmit"/>
     </LinearLayout>
 
 

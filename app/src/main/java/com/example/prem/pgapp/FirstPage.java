@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,26 +27,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FirstPage extends AppCompatActivity implements OnClickListener {
-    private Button buttonRegisterAsOwner,buttonRegisterAsTenant;
+    private Button buttonRegister;
     private EditText editTextEmail,editTextPassword,editTextName,editTextMobile;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+    private TextView oldUser;
     private FirebaseDatabase firebaseDatabase;
+    private Spinner loginSpinner;
     public String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_page);
         firebaseDatabase=FirebaseDatabase.getInstance();
-        buttonRegisterAsOwner=(Button)findViewById(R.id.buttonRegisterAsOwner);
-        buttonRegisterAsTenant=(Button)findViewById(R.id.buttonRegisterAsTenant);
+        buttonRegister=(Button)findViewById(R.id.buttonRegister);
         editTextEmail=(EditText)findViewById(R.id.editTextEmail);
         editTextPassword=(EditText)findViewById(R.id.editTextPassword);
         editTextName=(EditText)findViewById(R.id.editTextName);
         editTextMobile=(EditText)findViewById(R.id.editTextMobile);
-        buttonRegisterAsOwner.setOnClickListener(this);
-        buttonRegisterAsTenant.setOnClickListener(this);
+        buttonRegister.setOnClickListener(this);
+        oldUser=findViewById(R.id.OldUser);
+        oldUser.setOnClickListener(this);
+        loginSpinner=findViewById(R.id.loginSpinner);
         progressDialog=new ProgressDialog(this);
     }
     private void saveCredentials()
@@ -93,7 +98,7 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
                 {
                     //Registration Successfull
                     progressDialog.dismiss();
-                    Toast.makeText(FirstPage.this, "Regustration Successfull", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FirstPage.this, "Registration Successfull", Toast.LENGTH_SHORT).show();
                     finish();
                     Intent intent=new Intent(getApplicationContext(),ViewPG.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -123,13 +128,21 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
     }
     @Override
     public void onClick(View view) {
-            if(view==buttonRegisterAsTenant){
-            registerUser();}
-            if(view==buttonRegisterAsOwner)
+            if(view==buttonRegister){
+            if(loginSpinner.getSelectedItemId()==1){
+            registerUser();
+            }
+            if(loginSpinner.getSelectedItemId()==0)
             {
                    registerUserAsOwner();
             }
-            saveCredentials();
+            saveCredentials();}
+            if(view==oldUser)
+            {
+                Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
     }
 
     private void registerUserAsOwner() {
@@ -161,7 +174,11 @@ public class FirstPage extends AppCompatActivity implements OnClickListener {
                     progressDialog.dismiss();
                     Toast.makeText(FirstPage.this, "Registration Successfull", Toast.LENGTH_SHORT).show();
                     finish();
-                    Intent intent=new Intent(getApplicationContext(),ViewPG.class);
+                    Intent intent=null;
+                    if(loginSpinner.getSelectedItemId()==1)
+                        intent=new Intent(getApplicationContext(),ViewPG.class);
+                    if(loginSpinner.getSelectedItemId()==0)
+                        intent=new Intent(getApplicationContext(),OwnerHomeDrawer.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(new Intent(intent));
                     //SaveCredentials to firebase database

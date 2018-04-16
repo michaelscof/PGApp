@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Button buttonLogin;
     private EditText editTextEmail,editTextPassword;
+    private TextView forgotPassword,newUser;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private Spinner loginSpinner;
@@ -36,13 +38,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editTextPassword=findViewById(R.id.editTextPassword);
         buttonLogin=findViewById(R.id.buttonLogin);
         loginSpinner=findViewById(R.id.loginSpinner);
+        forgotPassword=findViewById(R.id.forgotPassword);
+        newUser=findViewById(R.id.NewUser);
         progressDialog=new ProgressDialog(this);
         buttonLogin.setOnClickListener(this);
+        newUser.setOnClickListener(this);
+        forgotPassword.setOnClickListener(this);
     }
     private void userLogin()
     {
         String email=editTextEmail.getText().toString().trim();
-        String password=editTextPassword.getText().toString().trim();
+        final String password=editTextPassword.getText().toString().trim();
         if(TextUtils.isEmpty(email))
         {
             Toast.makeText(this,"Please Enter Email",Toast.LENGTH_SHORT).show();
@@ -62,10 +68,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(task.isSuccessful())
                 {
                     Intent intent;
-                    if(loginSpinner.getSelectedItemId()==0 && databaseReference.child("Owners/"+firebaseAuth.getUid())!=null)
+                    if(loginSpinner.getSelectedItemId()==0)
                         intent=new Intent(LoginActivity.this,OwnerHomeDrawer.class);
                     else
                         intent=new Intent(LoginActivity.this,ViewPG.class);
+                    intent.putExtra("password",password);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(new Intent(intent));
                     finish();
@@ -80,6 +87,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     @Override
     public void onClick(View view) {
-        userLogin();
+        if(view==buttonLogin)
+            userLogin();
+        if(view==forgotPassword)
+        {
+            String email=editTextEmail.getText().toString().trim();
+            if(TextUtils.isEmpty(email))
+            {
+                Toast.makeText(getApplicationContext(),"Please enter email",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            progressDialog.setMessage("Sending email..");
+            progressDialog.show();
+            firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful())
+                    {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        if(view==newUser)
+        {
+            Intent intent=new Intent(getApplicationContext(),FirstPage.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

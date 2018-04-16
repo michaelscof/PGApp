@@ -36,9 +36,6 @@ public class MapsActivityUser extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
         landmark=getIntent().getExtras().getString("landmark");
         System.out.println(landmark);
-        /*ActionBar actionBar=getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);*/
     }
 
     @Override
@@ -60,6 +57,7 @@ public class MapsActivityUser extends FragmentActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -76,5 +74,7 @@ public class MapsActivityUser extends FragmentActivity implements OnMapReadyCall
         LatLng latLng=new LatLng(address.getLatitude(),address.getLongitude());
         mMap.addMarker(new MarkerOptions().position(latLng).title("Pg is located near this landmark"));
         mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        float zoomLevel = 14.0f;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
     }
 }

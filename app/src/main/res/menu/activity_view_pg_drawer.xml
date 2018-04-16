@@ -29,31 +29,45 @@
             android:icon="@drawable/ic_user_logout"
             android:title="Logout" />
     </group>
-
-    <item android:title="Facilities">
+    <item android:title="Search By">
         <menu>
+            <group android:checkableBehavior="single">
             <item
-                android:id="@+id/nav_ac"
-                android:icon="@drawable/ic_ac"
-                android:title="AC" />
+                android:id="@+id/nav_location"
+                android:icon="@drawable/ic_location"
+                android:title="Location" />
             <item
-                android:id="@+id/nav_food"
-                android:icon="@drawable/ic_food"
-                android:title="Food" />
-            <item
-                android:id="@+id/nav_Maid"
-                android:icon="@drawable/ic_maid"
-                android:title="Maid" />
-            <item
-                android:id="@+id/nav_wifi"
-                android:icon="@drawable/ic_wifi"
-                android:title="Wifi" />
-            <item
-                android:id="@+id/nav_laundry"
-                android:icon="@drawable/ic_laundry"
-                android:title="Laundry">
-            </item>
+                android:id="@+id/nav_price"
+                android:icon="@drawable/ic_rupee"
+                android:title="Price" />
+            </group>
         </menu>
     </item>
-
+        <item android:title="Facilities">
+            <menu>
+                <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_ac"
+                    android:icon="@drawable/ic_ac"
+                    android:title="AC" />
+                <item
+                    android:id="@+id/nav_food"
+                    android:icon="@drawable/ic_food"
+                    android:title="Food" />
+                <item
+                    android:id="@+id/nav_Maid"
+                    android:icon="@drawable/ic_maid"
+                    android:title="Maid" />
+                <item
+                    android:id="@+id/nav_wifi"
+                    android:icon="@drawable/ic_wifi"
+                    android:title="Wifi" />
+                <item
+                    android:id="@+id/nav_laundry"
+                    android:icon="@drawable/ic_laundry"
+                    android:title="Laundry">
+                </item>
+                </group>
+            </menu>
+        </item>
 </menu>

@@ -67,6 +67,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         databaseReference= FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.keepSynced(true);
         firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -85,6 +86,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             }
         });
         databaseReference=FirebaseDatabase.getInstance().getReference("Profile");
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -105,9 +107,10 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                     radioButtonMale.setChecked(male);
                     radioButtonMarried.setChecked(married);
                     radioButtonSingle.setChecked(single);
+                    if(imagePath!=null){
                     filePath=Uri.parse(imagePath);
                     Picasso.with(getApplicationContext()).load(filePath).into(imageViewProfile);
-                }
+                }}
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -133,6 +136,13 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         int id=item.getItemId();
         switch (id)
         {
+            case R.id.menuLogout:
+                intent=new Intent(getApplicationContext(),LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(new Intent(intent));
+                finish();
+                FirebaseAuth.getInstance().signOut();
+                return true;
             case android.R.id.home:
                 databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -172,6 +182,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                         Toast.makeText(getApplicationContext(), "Fill all fields!", Toast.LENGTH_SHORT).show();
                         return true;}
                 databaseReference=FirebaseDatabase.getInstance().getReference("Profile");
+                databaseReference.keepSynced(true);
                 if(filePath!=null)
                 {
                     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();

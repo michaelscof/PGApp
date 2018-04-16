@@ -1,6 +1,7 @@
 package com.example.prem.pgapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,7 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,20 +30,25 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class OwnerHomeDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private TextView ownerName,ownerEmail,noOfPGs,headerName,headerEmail;
-    private ImageView ownerPic,headerPic;
+    private ImageView headerPic,ownerPic;
     private DatabaseReference databaseReference;
+    private String password;
+    private String image1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_owner_home_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //password=getIntent().getExtras().getString("Password");
+        //Toast.makeText(this,password,Toast.LENGTH_LONG).show();
+        final String user=FirebaseAuth.getInstance().getCurrentUser().getUid();
         ownerName=findViewById(R.id.ownerName);
-        ownerEmail=findViewById(R.id.ownerEmail);
         noOfPGs=findViewById(R.id.ownerProperties);
         ownerPic=findViewById(R.id.ownerImageView);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -49,17 +57,35 @@ public class OwnerHomeDrawer extends AppCompatActivity
         headerPic=header.findViewById(R.id.imageViewUser);
         headerName=header.findViewById(R.id.textViewName);
         headerEmail=header.findViewById(R.id.textViewEmail);
+        DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Profile");
+        databaseReference1.keepSynced(true);
+        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild(user))
+                    {
+                    image1=dataSnapshot.child(FirebaseAuth.getInstance().getUid()).child("image").getValue(String.class);
+                    Uri filePath=Uri.parse(image1);
+                    Glide.with(getApplicationContext()).load(filePath).into(ownerPic);
+                    Picasso.with(getBaseContext()).load(filePath).resize(200,200).transform(new CircleTransform()).centerCrop().into(headerPic);
+                       // Glide.with(getApplicationContext()).load(filePath).into(headerPic);
+                    }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         databaseReference=FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String email = dataSnapshot.child("email").getValue(String.class);
+                String email = dataSnapshot.child(user).child("email").getValue(String.class);
                 headerEmail.setText(email);
-                String name = dataSnapshot.child("name").getValue(String.class);
+                String name = dataSnapshot.child(user).child("name").getValue(String.class);
                 headerName.setText(name);
-                final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-                final StorageReference picReference=storageReference.child("UsersProfilePic/"+email);
-                Picasso.with(getBaseContext()).load("https://firebasestorage.googleapis.com/v0/b/pgapp-a356c.appspot.com/o/UsersProfilePic%2Fpremkagrani%40gmail.com?alt=media&token=8beedfc0-f87a-48eb-ac7f-4c5ff4465ccd").resize(200,200).transform(new CircleTransform()).centerCrop().into(headerPic);
             }
 
             @Override
@@ -70,11 +96,10 @@ public class OwnerHomeDrawer extends AppCompatActivity
         if(user!=null)
         {
             databaseReference= FirebaseDatabase.getInstance().getReference("Users/"+user);
+            databaseReference.keepSynced(true);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String email = dataSnapshot.child("email").getValue(String.class);
-                    ownerEmail.setText(email);
                     String name = dataSnapshot.child("name").getValue(String.class);
                     ownerName.setText(name);
                 }
@@ -84,25 +109,28 @@ public class OwnerHomeDrawer extends AppCompatActivity
 
                 }
             });
-            databaseReference= FirebaseDatabase.getInstance().getReference("Owners/"+user);
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int pgCount = dataSnapshot.child("pgCount").getValue(Integer.class);
-                    noOfPGs.setText("No of Properties : " + pgCount);
-                }
+            databaseReference= FirebaseDatabase.getInstance().getReference("Owners/");
+            databaseReference.keepSynced(true);
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(user)) {
+                            int pgCount = dataSnapshot.child(user).child("pgCount").getValue(Integer.class);
+                            noOfPGs.setText("No of Properties : " + pgCount);
+                        }
+                    }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
-        }
+                    }
+                });
+            }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "App developed by Prem Kagrani", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -112,9 +140,6 @@ public class OwnerHomeDrawer extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -125,23 +150,6 @@ public class OwnerHomeDrawer extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.owner_home_drawer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -176,13 +184,6 @@ public class OwnerHomeDrawer extends AppCompatActivity
             startActivity(new Intent(intent));
             finish();
             FirebaseAuth.getInstance().signOut();
-
-        }
-        else if (id == R.id.nav_share) {
-
-        }
-        else if (id == R.id.nav_send) {
-
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

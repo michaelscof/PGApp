@@ -1,15 +1,21 @@
 package com.example.prem.pgapp;
 
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,8 +46,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +61,9 @@ public class ViewPG extends AppCompatActivity
     private TextView textViewEmail,textViewName;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    private MaterialSearchView searchView;
     private Query query;
-    public String user;
+    public String user,image1,pass;
     FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter;
     FirebaseRecyclerAdapter<PostAdDB,PGHolder> adapter1;
     @Override
@@ -63,6 +73,7 @@ public class ViewPG extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //pass=getIntent().getExtras().getString("password");
         //Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
         View header = navigationView.getHeaderView(0);
         imageViewCust = header.findViewById(R.id.imageViewCust);
@@ -72,14 +83,14 @@ public class ViewPG extends AppCompatActivity
         textViewName =  header.findViewById(R.id.textViewName);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "App developed by Prem Kagrani", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -88,6 +99,25 @@ public class ViewPG extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        final DatabaseReference databaseReference1=FirebaseDatabase.getInstance().getReference("Profile/"+FirebaseAuth.getInstance().getUid());
+        databaseReference1.keepSynced(true);
+        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("image")) {
+                    image1 = dataSnapshot.child("image").getValue(String.class);
+                    Uri filePath = Uri.parse(image1);
+                    Picasso.with(getBaseContext()).load(filePath).resize(200, 200).transform(new CircleTransform()).centerCrop().into(imageViewCust);
+                } else
+                    imageViewCust.setImageResource(R.mipmap.ic_launcher_round);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,9 +125,15 @@ public class ViewPG extends AppCompatActivity
                 textViewEmail.setText(email);
                 String name = dataSnapshot.child("name").getValue(String.class);
                 textViewName.setText(name);
-                final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-                final StorageReference picReference=storageReference.child("UsersProfilePic/"+email);
-                Picasso.with(getBaseContext()).load("https://firebasestorage.googleapis.com/v0/b/pgapp-a356c.appspot.com/o/UsersProfilePic%2Fpremkagrani%40gmail.com?alt=media&token=8beedfc0-f87a-48eb-ac7f-4c5ff4465ccd").resize(200,200).transform(new CircleTransform()).centerCrop().into(imageViewCust);
+                String password=dataSnapshot.child("password").getValue(String.class);
+              /*  if(pass!=password)
+                {
+                    databaseReference.child("password").setValue(String.class);
+                }
+                */
+//                final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+//                final StorageReference picReference=storageReference.child("UsersProfilePic/"+email);
+//                Picasso.with(getBaseContext()).load(image1).resize(200,200).transform(new CircleTransform()).centerCrop().into(imageViewCust);
             }
 
             @Override
@@ -109,6 +145,7 @@ public class ViewPG extends AppCompatActivity
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         DatabaseReference databaseReferencePG = FirebaseDatabase.getInstance().getReference("PGs");
+        databaseReferencePG.keepSynced(true);
         query = databaseReferencePG.orderByKey();
         FirebaseRecyclerOptions<PostAdDB> options =
                 new FirebaseRecyclerOptions.Builder<PostAdDB>()
@@ -121,7 +158,7 @@ public class ViewPG extends AppCompatActivity
                 holder.setName(model.getName());
                 holder.setAddress(model.getLocation());
                 holder.setType(model.isBoys());
-                holder.setLandmark(model.getLandmark());
+                holder.setLandmark("\u20B9"+ model.getPrice());
                 holder.setImage(getBaseContext(),model.getImage());
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -165,6 +202,9 @@ public class ViewPG extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_pg, menu);
         menu.findItem(R.id.buttonAdd).setVisible(false);
+        menu.findItem(R.id.menuLogout).setVisible(false);
+        /*MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);*/
         return true;
     }
     @Override
@@ -196,11 +236,22 @@ public class ViewPG extends AppCompatActivity
             adapter1=new FirebaseRecyclerAdapter<PostAdDB, PGHolder>(options1) {
                 @Override
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
+                    final String pgkey=getRef(position).getKey();
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
                     holder.setType(model.isBoys());
-                    holder.setLandmark(model.getLandmark());
+                    holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                            intent.putExtra("pgkey",pgkey);
+                            startActivity(new Intent(intent));
+                            finish();
+                            return;
+                        }
+                    });
                 }
 
                 @Override
@@ -223,10 +274,21 @@ public class ViewPG extends AppCompatActivity
                 @Override
                 protected void onBindViewHolder(@NonNull PGHolder holder, int position, @NonNull PostAdDB model) {
                     holder.setName(model.getName());
+                    final String pgkey=getRef(position).getKey();
                     holder.setAddress(model.getAddress());
                     holder.setType(model.isBoys());
-                    holder.setLandmark(model.getLandmark());
+                    holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                            intent.putExtra("pgkey",pgkey);
+                            startActivity(new Intent(intent));
+                            finish();
+                            return;
+                        }
+                    });
                 }
 
                 @Override
@@ -238,6 +300,7 @@ public class ViewPG extends AppCompatActivity
             };
             adapter1.startListening();
             recyclerView.setAdapter(adapter1);
+
 
         } else if (id == R.id.nav_logout) {
             Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
@@ -260,8 +323,19 @@ public class ViewPG extends AppCompatActivity
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
                     holder.setType(model.isBoys());
-                    holder.setLandmark(model.getLandmark());
+                    final String pgkey=getRef(position).getKey();
+                    holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                            intent.putExtra("pgkey",pgkey);
+                            startActivity(new Intent(intent));
+                            finish();
+                            return;
+                        }
+                    });
                 }
 
                 @Override
@@ -288,8 +362,19 @@ public class ViewPG extends AppCompatActivity
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
                     holder.setType(model.isBoys());
-                    holder.setLandmark(model.getLandmark());
+                    final String pgkey=getRef(position).getKey();
+                    holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                            intent.putExtra("pgkey",pgkey);
+                            startActivity(new Intent(intent));
+                            finish();
+                            return;
+                        }
+                    });
                 }
 
                 @Override
@@ -316,8 +401,19 @@ public class ViewPG extends AppCompatActivity
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
                     holder.setType(model.isBoys());
-                    holder.setLandmark(model.getLandmark());
+                    final String pgkey=getRef(position).getKey();
+                    holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                            intent.putExtra("pgkey",pgkey);
+                            startActivity(new Intent(intent));
+                            finish();
+                            return;
+                        }
+                    });
                 }
 
                 @Override
@@ -344,8 +440,19 @@ public class ViewPG extends AppCompatActivity
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
                     holder.setType(model.isBoys());
-                    holder.setLandmark(model.getLandmark());
+                    holder.setLandmark("\u20B9"+ model.getPrice());
+                    final String pgkey=getRef(position).getKey();
                     holder.setImage(getBaseContext(),model.getImage());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                            intent.putExtra("pgkey",pgkey);
+                            startActivity(new Intent(intent));
+                            finish();
+                            return;
+                        }
+                    });
                 }
 
                 @Override
@@ -383,8 +490,19 @@ public class ViewPG extends AppCompatActivity
                     holder.setName(model.getName());
                     holder.setAddress(model.getAddress());
                     holder.setType(model.isBoys());
-                    holder.setLandmark(model.getLandmark());
+                    holder.setLandmark("\u20B9"+ model.getPrice());
                     holder.setImage(getBaseContext(),model.getImage());
+                    final String pgkey=getRef(position).getKey();
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),SinglePGActivity.class);
+                            intent.putExtra("pgkey",pgkey);
+                            startActivity(new Intent(intent));
+                            finish();
+                            return;
+                        }
+                    });
                 }
 
                 @Override
@@ -396,6 +514,25 @@ public class ViewPG extends AppCompatActivity
             };
             adapter1.startListening();
             recyclerView.setAdapter(adapter1);
+        }
+        else if(id==R.id.nav_location)
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final EditText editTextLocation = new EditText(getApplicationContext());
+            editTextLocation.setHeight(200);
+            editTextLocation.setWidth(340);
+            editTextLocation.setGravity(Gravity.CENTER);
+            alert.setMessage("Location");
+            alert.setTitle("Enter Location");
+            alert.setView(editTextLocation);
+            alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+
+                }
+            });
+
+
+            alert.show();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

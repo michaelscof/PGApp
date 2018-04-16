@@ -1,5 +1,6 @@
 package com.example.prem.pgapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -45,11 +47,20 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_pg, menu);
+        MenuItem item=menu.findItem(R.id.buttonAdd);
+        item.setVisible(false);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
                 final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Owners");
+                databaseReference.keepSynced(true);
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -68,6 +79,13 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
                     }
                 });
                 return true;
+            case R.id.menuLogout:
+                intent=new Intent(getApplicationContext(),LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(new Intent(intent));
+                finish();
+                FirebaseAuth.getInstance().signOut();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -81,6 +99,9 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
     private void changePassword() {
         password = changePassword.getText().toString().trim();
         cpassword = confirmPassword.getText().toString().trim();
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Updating Password..!!");
+        progressDialog.show();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (!validatePassword()) {
             Toast.makeText(this,
@@ -90,6 +111,7 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
         }
         final String email = user.getEmail();
         final DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Users/"+user.getUid()+"/password");
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -105,15 +127,18 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         databaseReference.setValue(password);
+                                        progressDialog.dismiss();
                                         Toast.makeText(getApplicationContext(), "Password has been updated",
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
+                                        progressDialog.dismiss();
                                         Toast.makeText(getApplicationContext(), "Failed to update password",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                         } else {
+                            progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
                         }
                     }

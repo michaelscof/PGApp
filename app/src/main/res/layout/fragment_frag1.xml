@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.prem.pgapp.LoginActivity"
+    android:background="@drawable/pgimage"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Paying Guest"
+                    android:layout_weight="100"
+                    android:textColor="#00E676"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    style="@style/textViewback_style"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="37">
+                <Spinner
+                    android:id="@+id/loginSpinner"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+                <EditText
+                    android:id="@+id/editTextEmail"
+                    android:layout_width="match_parent"
+                    style="@style/editText_style"
+                    android:background="@drawable/textedit_background"
+                    android:layout_weight="1"
+                    android:cursorVisible="true"
+                    android:drawableLeft="@drawable/user_ic"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="25sp"
+                    android:singleLine="false" />
+
+            </LinearLayout>
+            <EditText
+                style="@style/editText_style"
+                android:background="@drawable/textedit_background"
+                android:id="@+id/editTextPassword"
+                android:drawableLeft="@drawable/password_ic"
+                android:drawableRight="@drawable/show_password_ic"
+                android:layout_weight="1"
+                android:paddingLeft="10sp"
+                android:paddingRight="10dp"
+                android:inputType="textPassword"
+                android:hint="Password"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="80"
+                android:gravity="center">
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="51dp"
+                    style="@style/buttonbackground_style"
+                    android:id="@+id/buttonLogin"
+                    android:text="LOGIN"
+                    android:layout_weight="5"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="30">
+                <TextView
+                    android:layout_marginTop="15dp"
+                    style="@style/textViewback_style"
+                    android:layout_weight="40"
+                    android:id="@+id/textViewForgotPassword"
+                    android:textColor="#00E676"
+                    android:text="Forgot Password?"
+                    android:layout_marginBottom="10dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

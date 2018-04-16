@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class ViewProperties extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseReference=FirebaseDatabase.getInstance().getReference("Owners/"+FirebaseAuth.getInstance().getUid());
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -63,6 +65,7 @@ public class ViewProperties extends AppCompatActivity {
             }
         });
         final DatabaseReference databaseReferencePG = FirebaseDatabase.getInstance().getReference("PGs");
+        databaseReferencePG.keepSynced(true);
         query = databaseReferencePG.orderByChild("ownerid").equalTo(FirebaseAuth.getInstance().getUid());
         FirebaseRecyclerOptions<PostAdDB> options =
                 new FirebaseRecyclerOptions.Builder<PostAdDB>()
@@ -75,7 +78,7 @@ public class ViewProperties extends AppCompatActivity {
                 holder.setName(model.getName());
                 holder.setAddress(model.getLocation());
                 holder.setType(model.isBoys());
-                holder.setLandmark(model.getLandmark());
+                holder.setLandmark("\u20B9"+model.getPrice());
                 holder.setImageOwner(getBaseContext(),model.getImage());
                 holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -117,6 +120,14 @@ public class ViewProperties extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_pg, menu);
+        MenuItem item=menu.findItem(R.id.buttonAdd);
+        item.setVisible(false);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
         switch (id)
@@ -125,6 +136,13 @@ public class ViewProperties extends AppCompatActivity {
                 intent = new Intent(this, OwnerHomeDrawer.class);
                 startActivity(intent);
                 finish();
+                return true;
+            case R.id.menuLogout:
+                intent=new Intent(getApplicationContext(),LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(new Intent(intent));
+                finish();
+                FirebaseAuth.getInstance().signOut();
                 return true;
         }
         return super.onOptionsItemSelected(item);

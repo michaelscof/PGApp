@@ -57,6 +57,7 @@ public class SinglePGActivity extends AppCompatActivity implements View.OnClickL
         imageButtonLocation.setOnClickListener(this);
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         databaseReference= FirebaseDatabase.getInstance().getReference("PGs/"+pgkey);
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,7 +96,7 @@ public class SinglePGActivity extends AppCompatActivity implements View.OnClickL
                 int price=dataSnapshot.child("price").getValue(Integer.class);
                 textViewName.setText(name);
                 textViewLocation.setText(location);
-                textViewPrice.setText("INR "+String.valueOf(price));
+                textViewPrice.setText("\u20B9 "+String.valueOf(price));
                 String imagePath=dataSnapshot.child("image").getValue(String.class);
                 Picasso.with(getBaseContext()).load(Uri.parse(imagePath)).into(imageViewPG);
                 contact=dataSnapshot.child("contact").getValue(String.class);

@@ -6,19 +6,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_post_ad"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/ic_menu_send"
             android:title="Post Ad" />
         <item
             android:id="@+id/nav_view_properties"
-            android:icon="@drawable/ic_no_maid"
+            android:icon="@drawable/ic_eye"
             android:title="View Properties" />
         <item
             android:id="@+id/nav_edit_profile"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/edit_icon"
             android:title="Edit Profile" />
         <item
             android:id="@+id/nav_change_password"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_password"
             android:title="Change Password" />
         <item
             android:id="@+id/nav_logout"
@@ -26,17 +26,5 @@
             android:title="Logout" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
 
 </menu>
